@@ -1,0 +1,123 @@
+'use client';
+import { useState } from 'react'
+import axios from 'axios'
+import "../app/globals.css";
+import { useRouter } from 'next/router'
+import { useAuth } from '../context/AuthContext'
+
+export default function Login() {
+    const router = useRouter()
+    const { login } = useAuth()
+
+  const [step, setStep] = useState(1)
+  const [phone, setPhone] = useState('')
+  const [otp, setOtp] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
+  
+
+  const requestOtp = async () => {
+    try {
+      setLoading(true)
+      await axios.post('http://localhost:4007/auth/request-otp', { phone })
+      setMessage('OTP sent to your number')
+      setStep(2)
+    } catch (err) {
+      const msg = err?.response?.data?.message;
+    
+      // If message is a string, show it directly
+      if (typeof msg === 'string') {
+        setMessage(msg);
+      }
+      // If message is an object with nested error details
+      else if (typeof msg === 'object' && msg !== null) {
+        const extractedMessages = Object.values(msg)
+          .map((entry) => {
+            if (typeof entry === 'object' && entry?.message) return entry.message;
+            if (typeof entry === 'string') return entry;
+            return '';
+          })
+          .filter(Boolean)
+          .join(', ');
+    
+        setMessage(extractedMessages || 'Validation error occurred.');
+      } else {
+        setMessage('Error sending OTP');
+      }
+    }
+     finally {
+      setLoading(false)
+    }
+  }
+
+  const verifyOtp = async () => {
+    try {
+      setLoading(true)
+      const res = await axios.post('http://localhost:4007/auth/verify-otp', { phone, code: otp })
+      localStorage.setItem('token', res.data.result.token)
+      login(res.data.result)
+      setMessage('Logged in successfully!')
+
+      // redirect after login: check if redirect param exists
+      const redirectTo = router.query.redirect || '/'
+      router.push(redirectTo)
+    } catch (err) {
+      setMessage(err?.response?.data?.message || 'OTP verification failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-purple-100 flex items-center justify-center px-4">
+      <div className="bg-white/70 backdrop-blur-lg shadow-lg rounded-3xl px-8 py-10 w-full max-w-md relative">
+        
+        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-[#1a1a1a] text-white flex items-center justify-center text-3xl rounded-full shadow-md">
+          👤
+        </div>
+
+        <h2 className="text-center text-2xl font-semibold text-gray-800 mb-8 mt-4">Login</h2>
+
+        {step === 1 ? (
+          <>
+            <input
+              type="tel"
+              placeholder="Phone number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full px-4 py-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 transition"
+            />
+            <button
+              onClick={requestOtp}
+              disabled={loading}
+              className="w-full py-3 bg-black text-white rounded-lg hover:opacity-90 transition"
+            >
+              {loading ? 'Sending...' : 'Send OTP'}
+            </button>
+          </>
+        ) : (
+          <>
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              className="w-full px-4 py-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 transition"
+            />
+            <button
+              onClick={verifyOtp}
+              disabled={loading}
+              className="w-full py-3 bg-black text-white rounded-lg hover:opacity-90 transition"
+            >
+              {loading ? 'Verifying...' : 'Verify OTP'}
+            </button>
+          </>
+        )}
+
+        {message && (
+          <p className="mt-4 text-center text-sm text-gray-700">{message}</p>
+        )}
+      </div>
+    </div>
+  )
+}

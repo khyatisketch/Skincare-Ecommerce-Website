@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function AdminOrders() {
-  const { token, loading, user } = useAuth()
+  const { token, loading } = useAuth()
   const [orders, setOrders] = useState([])
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [isShippingOpen, setIsShippingOpen] = useState(true)

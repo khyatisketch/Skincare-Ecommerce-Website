@@ -219,7 +219,7 @@ export default function Orders() {
   onClick={async () => {
     try {
       const token = localStorage.getItem('token')
-      const res = await axios.post(
+      await axios.post(
         `http://localhost:4007/order/${order.id}/resendConfirmation`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }

@@ -4,8 +4,8 @@ import axios from 'axios'
 
 export default function CheckoutPage() {
   const { cart } = useCart()
-  const [couponCode, setCouponCode] = useState('')
-const [discountInfo, setDiscountInfo] = useState(null)
+//   const [couponCode, setCouponCode] = useState('')
+// const [discountInfo, setDiscountInfo] = useState(null)
 
   const [shipping, setShipping] = useState({
     name: '',
@@ -44,17 +44,17 @@ const [discountInfo, setDiscountInfo] = useState(null)
     return { subtotal, total: subtotal };
   }, [cart]);
   
-  const applyCoupon = async () => {
-    try {
-      const res = await axios.post('http://localhost:4007/coupons/checkout/applyCoupon', {
-        code: couponCode,
-        orderTotal: cartTotal,
-      });
-      setDiscountInfo(res.data)
-    } catch (err) {
-      alert(err.response.data.error)
-    }
-  }
+  // const applyCoupon = async () => {
+  //   try {
+  //     const res = await axios.post('http://localhost:4007/coupons/checkout/applyCoupon', {
+  //       code: couponCode,
+  //       orderTotal: cartTotal,
+  //     });
+  //     setDiscountInfo(res.data)
+  //   } catch (err) {
+  //     alert(err.response.data.error)
+  //   }
+  // }
   
 
   return (
@@ -100,12 +100,13 @@ const [discountInfo, setDiscountInfo] = useState(null)
           <div className="flex justify-between mb-2"><span>Subtotal</span><span>₹{subtotal}</span></div>
           <div className="flex justify-between mb-2"><span>Shipping</span><span className="text-green-600">Free</span></div>
           <div className="flex justify-between font-semibold text-lg"><span>Total</span><span>₹{total}</span>
-          {discountInfo && (
-  <>
-    <p>Discount: -₹{discountInfo.discount}</p>
-    <p className="font-bold">Final: ₹{discountInfo.finalAmount}</p>
-  </>
-)}</div>
+          {/* {discountInfo && (
+  // <>
+  //   <p>Discount: -₹{discountInfo.discount}</p>
+  //   <p className="font-bold">Final: ₹{discountInfo.finalAmount}</p>
+  // </>
+)}</div> */}
+</div>
         </div>
       </div>
     </div>

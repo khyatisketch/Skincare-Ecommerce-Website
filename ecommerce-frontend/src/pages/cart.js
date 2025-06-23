@@ -19,24 +19,24 @@ export default function CartDrawer() {
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
-  const placeOrder = async (cart, token) => {
-    const items = cart.map(item => ({
-      productId: String(item.id),
-      quantity: item.quantity,
-    }))
+  // const placeOrder = async (cart, token) => {
+  //   const items = cart.map(item => ({
+  //     productId: String(item.id),
+  //     quantity: item.quantity,
+  //   }))
 
-    const res = await axios.post('http://localhost:4007/order/createOrder',
-      {
-        items,
-        shippingAddress: "Default Address, Abu Road, Rajasthan, India" // Add this
-      }, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
+  //   const res = await axios.post('http://localhost:4007/order/createOrder',
+  //     {
+  //       items,
+  //       shippingAddress: "Default Address, Abu Road, Rajasthan, India" // Add this
+  //     }, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`
+  //     }
+  //   })
 
-    return res.data.result
-  }
+  //   return res.data.result
+  // }
 
   const handleCheckout = () => {
     setIsCartOpen(false)

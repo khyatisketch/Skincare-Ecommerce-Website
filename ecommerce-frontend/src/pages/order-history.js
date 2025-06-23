@@ -18,6 +18,7 @@ function OrderItem({ order }) {
       )
       setMessage('Confirmation email resent!')
     } catch (err) {
+      console.error('Resend confirmation failed:', err);
       setMessage('Failed to resend email.')
     } finally {
       setLoading(false)

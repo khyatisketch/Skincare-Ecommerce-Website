@@ -26,27 +26,6 @@ export default function Products() {
 
   const limit = 10;
 
-  // useEffect(() => {
-  //   if (products.length === 0) return;
-
-  //   const fetchReviews = async () => {
-  //     const reviewsData = {};
-  //     for (const product of products) {
-  //       try {
-  //         const res = await axios.get(`http://localhost:4007/products/${product.id}/getReviews`);
-  //         reviewsData[product.id] = res.data.result.reviews || [];
-  //       } catch (err) {
-  //         console.error(`Error fetching reviews for product ${product.id}`, err);
-  //         reviewsData[product.id] = [];
-  //       }
-  //     }
-  //     setProductReviews(reviewsData);
-  //   };
-
-  //   fetchReviews();
-  // }, [products]);
-
-
   // Fetch categories once on mount
   useEffect(() => {
     axios.get('http://localhost:4007/categories/getAllCategories')
@@ -105,6 +84,15 @@ export default function Products() {
   
     if (products.length) fetchRatings();
   }, [products]);
+
+  useEffect(() => {
+    if (addedProductId) {
+      setShowNotification(true);
+      const timer = setTimeout(() => setShowNotification(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [addedProductId]);
+  
 
   const handleFilterSubmit = (e) => {
     e.preventDefault()
@@ -431,7 +419,7 @@ export default function Products() {
                   if (p.stock > 0) {
                     addToCart(p);
                     setAddedProductId(p.id);
-                    setShowNotification(true);
+                    setAddedProductId(p.id);  
                     setTimeout(() => setAddedProductId(null), 2000);
                     setTimeout(() => setShowNotification(false), 3000);
                     setIsCartOpen(true);
@@ -557,6 +545,31 @@ export default function Products() {
             </button>
           </div>
         </div>
+        {showNotification && (
+ <div
+ style={{
+   position: 'fixed',
+   top: 20,
+   left: '50%',
+   transform: 'translateX(-50%)',
+   backgroundColor: '#f6a5c0',
+   color: '#fff',
+   padding: '12px 24px',
+   borderRadius: '10px',
+   boxShadow: '0 6px 16px rgba(246, 165, 192, 0.35)',
+   fontSize: '14px',
+   fontWeight: 600,
+   zIndex: 1000,
+   opacity: showNotification ? 1 : 0,
+   pointerEvents: 'none',
+   transition: 'opacity 0.5s ease-in-out',
+ }}
+>
+ Added to cart!
+</div>
+
+)}
+
       </div>
     </>
   )

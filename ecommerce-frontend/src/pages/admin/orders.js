@@ -14,7 +14,7 @@ export default function AdminOrders() {
     if (!token || loading) return
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('http://localhost:4007/order/allOrders', {
+        const res = await axios.get(`${process.env.BACKEND_API_URL}/order/allOrders`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         setOrders(res.data.result.orders || [])
@@ -28,7 +28,7 @@ export default function AdminOrders() {
   const updateStatus = async (id, newStatus) => {
     try {
       await axios.patch(
-        `http://localhost:4007/order/orders/${id}/status`,
+        `${process.env.BACKEND_API_URL}/order/orders/${id}/status`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -65,7 +65,7 @@ const openShippingEdit = (order) => {
 const saveShippingInfo = async (orderId) => {
   try {
     await axios.patch(
-      `http://localhost:4007/order/${orderId}/shipping`,
+      `${process.env.BACKEND_API_URL}/order/${orderId}/shipping`,
       {
         shippingAddress: shippingAddressInput,
         trackingNumber: trackingNumberInput,

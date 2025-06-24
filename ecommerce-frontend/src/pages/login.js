@@ -19,7 +19,7 @@ export default function Login() {
   const requestOtp = async () => {
     try {
       setLoading(true)
-      await axios.post('http://localhost:4007/auth/request-otp', { phone })
+      await axios.post(`${process.env.BACKEND_API_URL}/auth/request-otp`, { phone })
       setMessage('OTP sent to your number')
       setStep(2)
     } catch (err) {
@@ -53,7 +53,7 @@ export default function Login() {
   const verifyOtp = async () => {
     try {
       setLoading(true)
-      const res = await axios.post('http://localhost:4007/auth/verify-otp', { phone, code: otp })
+      const res = await axios.post(`${process.env.BACKEND_API_URL}/auth/verify-otp`, { phone, code: otp })
       localStorage.setItem('token', res.data.result.token)
       login(res.data.result)
       setMessage('Logged in successfully!')

@@ -12,7 +12,7 @@ function OrderItem({ order }) {
     try {
       const token = localStorage.getItem('token')
       await axios.post(
-        `http://localhost:4007/order/${order.id}/resend-confirmation`,
+        `${process.env.BACKEND_API_URL}/order/${order.id}/resend-confirmation`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -44,7 +44,7 @@ export default function OrderHistoryPage() {
     const fetchOrders = async () => {
       const token = localStorage.getItem('token')
       try {
-        const res = await axios.get('http://localhost:4007/order/myOrders', {
+        const res = await axios.get(`${process.env.BACKEND_API_URL}/order/myOrders`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         setOrders(res.data.result.orders)

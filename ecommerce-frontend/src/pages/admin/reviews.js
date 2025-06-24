@@ -10,7 +10,7 @@ export default function AdminReviews() {
 
   const fetchReviews = async () => {
     try {
-      const res = await axios.get('http://localhost:4007/products/admin/reviews', {
+      const res = await axios.get(`${process.env.BACKEND_API_URL}/products/admin/reviews`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       setReviews(res.data.result.reviews || [])
@@ -27,7 +27,7 @@ export default function AdminReviews() {
   const approveReview = async (id) => {
     try {
       await axios.patch(
-        `http://localhost:4007/products/admin/reviews/${id}/approve`,
+        `${process.env.BACKEND_API_URL}/products/admin/reviews/${id}/approve`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -41,7 +41,7 @@ export default function AdminReviews() {
 
   const deleteReview = async (id) => {
     try {
-      await axios.delete(`http://localhost:4007/products/admin/reviews/${id}`, {
+      await axios.delete(`${process.env.BACKEND_API_URL}/products/admin/reviews/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       setReviews((prev) => prev.filter((r) => r.id !== id))

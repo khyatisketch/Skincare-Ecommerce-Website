@@ -18,7 +18,7 @@ export default function Orders() {
       }
   
       try {
-        const res = await axios.get(`${process.env.BACKEND_API_URL}/order/myOrders`, {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/order/myOrders`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         setOrders(res.data.result.orders)
@@ -220,7 +220,7 @@ export default function Orders() {
     try {
       const token = localStorage.getItem('token')
       await axios.post(
-        `${process.env.BACKEND_API_URL}/order/${order.id}/resendConfirmation`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/order/${order.id}/resendConfirmation`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       )

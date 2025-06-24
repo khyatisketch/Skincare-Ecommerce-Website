@@ -28,7 +28,7 @@ export default function Products() {
 
   // Fetch categories once on mount
   useEffect(() => {
-    axios.get(`${process.env.BACKEND_API_URL}/categories/getAllCategories`)
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/categories/getAllCategories`)
       .then(res => {
         console.log('Categories response:', res.data);
         setCategories(res.data.result.data);
@@ -49,7 +49,7 @@ export default function Products() {
       minPrice: minPrice || undefined,
       maxPrice: maxPrice || undefined,
     };
-    axios.get(`${process.env.BACKEND_API_URL}/products/getAllProducts`, { params })
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/getAllProducts`, { params })
       .then(res => {
         setProducts(res.data.result.data || []);
         setTotalPages(res.data.result.totalPages || 1);
@@ -65,7 +65,7 @@ export default function Products() {
   
       for (const p of products) {
         try {
-          const res = await axios.post(`${process.env.BACKEND_API_URL}/products/avgRating`, { productId: p.id },
+          const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/avgRating`, { productId: p.id },
             {
               headers: {
                 'Content-Type': 'application/json'

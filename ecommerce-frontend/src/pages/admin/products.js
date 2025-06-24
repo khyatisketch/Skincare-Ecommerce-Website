@@ -26,7 +26,7 @@ export default function AdminProducts() {
 
   const fetchProducts = async (token) => {
     try {
-      const res = await axios.get(`${process.env.BACKEND_API_URL}/products/getAllProducts`, {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/getAllProducts`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProducts(res.data.result.data || []);
@@ -37,7 +37,7 @@ export default function AdminProducts() {
 
   const fetchCategories = async (token) => {
     try {
-      const res = await axios.get(`${process.env.BACKEND_API_URL}/categories/getAllCategories`, {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/categories/getAllCategories`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCategories(res.data.result.data || []);
@@ -105,8 +105,8 @@ export default function AdminProducts() {
       
 
       const url = editingProduct
-        ? `${process.env.BACKEND_API_URL}/products/updateProduct/${editingProduct.id}`
-        : `${process.env.BACKEND_API_URL}/products/createProduct`;
+        ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/updateProduct/${editingProduct.id}`
+        : `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/createProduct`;
 
       const method = editingProduct ? 'put' : 'post';
 
@@ -156,7 +156,7 @@ export default function AdminProducts() {
     if (!confirm('Are you sure you want to delete this product?')) return;
 
     try {
-      await axios.delete(`${process.env.BACKEND_API_URL}/products/deleteProduct/${id}`, {
+      await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/deleteProduct/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchProducts(token);
@@ -435,7 +435,7 @@ export default function AdminProducts() {
   <button
     onClick={async () => {
       try {
-        await axios.patch(`${process.env.BACKEND_API_URL}/products/admin/products/${p.id}/restock`, {
+        await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/admin/products/${p.id}/restock`, {
           amount: restockAmounts[p.id] || 1,
         }, {
           headers: { Authorization: `Bearer ${token}` },

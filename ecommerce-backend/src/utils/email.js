@@ -4,6 +4,7 @@ require('dotenv').config();
 console.log('SMTP_USER:', process.env.SMTP_USER);
 console.log('SMTP_PASS:', process.env.SMTP_PASS ? '*****' : 'not set');
 
+console.log("Current DB URL:", process.env.DATABASE_URL);
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {

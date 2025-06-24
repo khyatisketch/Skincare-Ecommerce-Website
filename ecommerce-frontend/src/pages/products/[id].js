@@ -34,7 +34,7 @@ useEffect(() => {
     console.log('Calling related products with:', { categoryId, exclude });
 
     axios
-      .get(`${process.env.BACKEND_API_URL}/products/related/${categoryId}?exclude=${exclude}`)
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/related/${categoryId}?exclude=${exclude}`)
       .then(res => {
         console.log('Related products:', res.data);
         setRelatedProducts(res.data.result?.data || []);
@@ -48,7 +48,7 @@ useEffect(() => {
 
 useEffect(() => {
   if (id) {
-    axios.get(`${process.env.BACKEND_API_URL}/products/${id}/getReviews`)
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/${id}/getReviews`)
       .then(res => {
         const fetchedReviews = res.data?.result?.reviews || [];
         setReviews(fetchedReviews);
@@ -64,7 +64,7 @@ useEffect(() => {
 const submitReview = async () => {
   try {
     setReviewSubmitting(true);
-    await axios.post(`${process.env.BACKEND_API_URL}/products/${id}/reviews`, {
+    await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/${id}/reviews`, {
       rating,
       comment,
     },
@@ -79,7 +79,7 @@ const submitReview = async () => {
     setComment('');
 
     // Optionally, refetch reviews or show a success toast
-    const res = await axios.get(`${process.env.BACKEND_API_URL}/products/${id}/getReviews`);
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/${id}/getReviews`);
     const fetchedReviews = res.data?.result?.reviews || [];
     setReviews(fetchedReviews);
     alert("Review submitted!");
@@ -94,7 +94,7 @@ const submitReview = async () => {
 
   useEffect(() => {
     if (id) {
-      axios.get(`${process.env.BACKEND_API_URL}/products/product/${id}`)
+      axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/product/${id}`)
         .then(res => {
           const data = res.data.result
           console.log('Product:', data);

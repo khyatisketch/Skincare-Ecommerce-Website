@@ -11,12 +11,20 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true)
   const [mainImage, setMainImage] = useState(null) // Track selected main image
   const [relatedProducts, setRelatedProducts] = useState([])
-  const token = localStorage.getItem('token'); 
+  // const token = localStorage.getItem('token'); 
 
   const [rating, setRating] = useState(5);
 const [comment, setComment] = useState('');
 const [reviewSubmitting, setReviewSubmitting] = useState(false);
 const [reviews, setReviews] = useState([]);
+const [token, setToken] = useState(null);
+
+useEffect(() => {
+  if (typeof window !== 'undefined') {
+    setToken(localStorage.getItem('token'));
+  }
+}, []);
+
 
  useEffect(() => {
   if (product?.categoryId && product?.id) {

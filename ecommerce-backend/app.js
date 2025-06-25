@@ -22,7 +22,24 @@ class Server {
   
         this.app.use(express.json({ limit: '50mb' }));
         this.app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-        this.app.use(cors());
+        const allowedOrigins = [
+            'http://localhost:3000',
+            'https://skincare-ecommerce-website.vercel.app',
+          ];
+          
+          const corsOptions = {
+            origin: function (origin, callback) {
+              if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+              } else {
+                callback(new Error('Not allowed by CORS'));
+              }
+            },
+            credentials: true,
+          };
+          
+          this.app.use(cors(corsOptions));
+          
         this.http = http.Server(this.app);
     }
 

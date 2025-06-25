@@ -35,10 +35,13 @@ class Server {
                 callback(new Error('Not allowed by CORS'));
               }
             },
-            credentials: true,
+            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
           };
           
           this.app.use(cors(corsOptions));
+          this.app.options('*', cors(corsOptions));
           
         this.http = http.Server(this.app);
     }

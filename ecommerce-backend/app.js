@@ -41,7 +41,7 @@ class Server {
           };
           
           this.app.use(cors(corsOptions));
-          this.app.options('*', cors(corsOptions));
+          // this.app.options('*', cors(corsOptions));
           
         this.http = http.Server(this.app);
     }

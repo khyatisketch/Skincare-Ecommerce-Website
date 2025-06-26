@@ -19,7 +19,7 @@ export default function AdminCouponsPage() {
       const res = await axios.get('/api/admin/coupons')
       setCoupons(res.data)
     } catch (err) {
-      toast.error('Failed to fetch coupons')
+      toast.error('Failed to fetch coupons', err)
     }
   }
 
@@ -49,7 +49,7 @@ export default function AdminCouponsPage() {
       toast.success('Deleted!')
       fetchCoupons()
     } catch (err) {
-      toast.error('Delete failed')
+      toast.error('Delete failed', err)
     }
   }
 

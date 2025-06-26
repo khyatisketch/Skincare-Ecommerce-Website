@@ -1,13 +1,11 @@
 import { useCart } from '../context/CartContext'
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import axios from 'axios'
 
 export default function CheckoutPage() {
   const { cart } = useCart()
-  const [couponCode, setCouponCode] = useState('')
-  const [discountInfo, setDiscountInfo] = useState(null)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+//   const [couponCode, setCouponCode] = useState('')
+// const [discountInfo, setDiscountInfo] = useState(null)
 
   const [shipping, setShipping] = useState({
     name: '',
@@ -15,37 +13,6 @@ export default function CheckoutPage() {
     phone: '',
     address: ''
   })
-
-  const applyCoupon = async () => {
-    setLoading(true)
-    setError('')
-    try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/coupons/checkout/applyCoupon`, {
-        code: couponCode,
-        orderTotal: total
-      })
-      setDiscountInfo(res.data)
-      localStorage.setItem('appliedCoupon', JSON.stringify(res.data))
-      toast.success(`Coupon ${res.data.couponCode} applied!`)
-    } catch (err) {
-      setError(err?.response?.data?.error || 'Something went wrong')
-      setDiscountInfo(null)
-      toast.error(err?.response?.data?.error || 'Failed to apply coupon')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    const savedCoupon = localStorage.getItem('appliedCoupon')
-    if (savedCoupon) {
-      const parsed = JSON.parse(savedCoupon)
-      setDiscountInfo(parsed)
-      setCouponCode(parsed.couponCode)
-    }
-  }, [])
-  
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -57,8 +24,7 @@ export default function CheckoutPage() {
     try {
       const res = await axios.post('https://skincare-ecommerce-website.onrender.com/payments/createCheckoutSession', {
         cartItems: cart,
-        shipping,
-        discount: discountInfo
+        shipping
       }, {
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -69,12 +35,14 @@ export default function CheckoutPage() {
     }
   }
 
-    const total = useMemo(() => {
-      return cart.reduce((sum, item) => {
-        const price = parseFloat(item.price) || 0;
-        return sum + price * item.quantity;
-      }, 0);
-    }, [cart]);
+  const { subtotal, total } = useMemo(() => {
+    const subtotal = cart.reduce((sum, item) => {
+      const price = parseFloat(item.price) || 0;
+      return sum + price * item.quantity;
+    }, 0);
+  
+    return { subtotal, total: subtotal };
+  }, [cart]);
   
   // const applyCoupon = async () => {
   //   try {
@@ -113,29 +81,6 @@ export default function CheckoutPage() {
                 <div className="text-sm text-gray-500">{item.size}</div>
                 <div className="text-sm">Qty: {item.quantity}</div>
               </div>
-              {/* Coupon Form */}
-<div className="mt-4 space-y-2">
-  <label htmlFor="coupon" className="block text-sm font-medium">Have a coupon?</label>
-  <div className="flex gap-2">
-    <input
-      type="text"
-      id="coupon"
-      className="border p-2 w-full"
-      placeholder="Enter coupon code"
-      value={couponCode}
-      onChange={(e) => setCouponCode(e.target.value)}
-    />
-    <button
-      className="bg-black text-white px-4 py-2"
-      onClick={applyCoupon}
-      disabled={loading}
-    >
-      {loading ? 'Checking...' : 'Apply'}
-    </button>
-  </div>
-  {error && <p className="text-red-500 text-sm">{error}</p>}
-</div>
-
               <div className="text-right">
                 {item.originalPrice && item.originalPrice !== item.price ? (
                   <>
@@ -151,20 +96,18 @@ export default function CheckoutPage() {
         </div>
 
         {/* Price Details */}
-       {/* Price Summary */}
-<div className="mt-6 space-y-2 text-sm">
-  <p>Subtotal: ₹{total}</p>
-  {discountInfo && (
-    <>
-      <p className="text-green-600">Discount ({discountInfo.couponCode}): -₹{discountInfo.discount}</p>
-      <p className="font-bold text-lg">Total: ₹{discountInfo.finalAmount}</p>
-    </>
-  )}
-  {!discountInfo && (
-    <p className="font-bold text-lg">Total: ₹{total}</p>
-  )}
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <div className="flex justify-between mb-2"><span>Subtotal</span><span>₹{subtotal}</span></div>
+          <div className="flex justify-between mb-2"><span>Shipping</span><span className="text-green-600">Free</span></div>
+          <div className="flex justify-between font-semibold text-lg"><span>Total</span><span>₹{total}</span>
+          {/* {discountInfo && (
+  // <>
+  //   <p>Discount: -₹{discountInfo.discount}</p>
+  //   <p className="font-bold">Final: ₹{discountInfo.finalAmount}</p>
+  // </>
+)}</div> */}
 </div>
-
+        </div>
       </div>
     </div>
   )

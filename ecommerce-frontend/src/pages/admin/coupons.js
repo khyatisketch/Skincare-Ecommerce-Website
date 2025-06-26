@@ -26,7 +26,9 @@ export default function AdminCouponsPage() {
         headers: { Authorization: `Bearer ${token}` },
       })
       console.log('Coupons API response:', res.data)
-      setCoupons(res.data.result || [])
+  
+      // Access the array inside result.coupons
+      setCoupons(res.data.result.coupons || [])
     } catch (err) {
       console.error('Failed to fetch coupons:', err)
     }

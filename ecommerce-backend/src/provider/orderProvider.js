@@ -21,7 +21,7 @@ const createOrderProvider = async ({ userId, items, shippingAddress, couponCode,
     };
   });
 
-  let total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+   total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   // Start transaction
   const order = await prisma.$transaction(async (tx) => {

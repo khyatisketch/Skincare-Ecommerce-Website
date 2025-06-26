@@ -25,6 +25,7 @@ export default function AdminCouponsPage() {
       const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/admin/coupons`, {
         headers: { Authorization: `Bearer ${token}` },
       })
+      console.log('Coupons API response:', res.data)
       setCoupons(res.data.result || [])
     } catch (err) {
       console.error('Failed to fetch coupons:', err)

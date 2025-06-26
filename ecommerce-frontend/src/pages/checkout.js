@@ -27,16 +27,28 @@ const router = useRouter()
   }, [cart])
 
   const applyCoupon = async () => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      toast.error('🔒 Please log in to apply a coupon.')
+      router.push('/login')
+      return
+    }
+  
     setLoading(true)
     setError('')
+  
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/checkout/applyCoupon`, {
-        code: couponCode,
-        orderTotal: total,
-      },
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/checkout/applyCoupon`,
+        {
+          code: couponCode,
+          orderTotal: total,
+        },
         {
           headers: { Authorization: `Bearer ${token}` }
-        })
+        }
+      )
+  
       setDiscountInfo(res.data)
       localStorage.setItem('appliedCoupon', JSON.stringify(res.data))
       toast.success(`✅ Coupon "${res.data.couponCode}" applied!`)
@@ -48,6 +60,7 @@ const router = useRouter()
       setLoading(false)
     }
   }
+  
 
   const removeCoupon = () => {
     setDiscountInfo(null)

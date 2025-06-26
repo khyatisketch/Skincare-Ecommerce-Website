@@ -2,8 +2,10 @@ import { useCart } from '../context/CartContext'
 import { useState, useMemo, useEffect } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/router'
 
 export default function CheckoutPage() {
+const router = useRouter()
   const { cart } = useCart()
   const [couponCode, setCouponCode] = useState('')
   const [discountInfo, setDiscountInfo] = useState(null)
@@ -75,8 +77,14 @@ export default function CheckoutPage() {
       toast.error('❌ Coupon has expired. Please remove it and try again.')
       return
     }
-
+  
     const token = localStorage.getItem('token')
+    if (!token) {
+      toast.error('🔒 Please log in to proceed.')
+      router.push('/login')
+      return
+    }
+  
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/payments/createCheckoutSession`, {
         cartItems: cart,
@@ -91,6 +99,7 @@ export default function CheckoutPage() {
       alert('Checkout failed. Please check your inputs and try again.')
     }
   }
+  
 
   const discountedItems = useMemo(() => {
     if (!discountInfo || isCouponExpired) return cart

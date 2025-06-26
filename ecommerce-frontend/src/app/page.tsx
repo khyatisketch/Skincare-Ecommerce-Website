@@ -37,7 +37,7 @@ export default function HomeHero() {
           className="w-full md:w-1/2 flex justify-center"
         >
           <Image
-            src="public/hero_skincare.jpg" // Replace this with your product image
+            src="/hero_skincare.jpg" // Replace this with your product image
             alt="Skincare Product"
             width={500}
             height={500}

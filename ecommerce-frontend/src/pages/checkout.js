@@ -1,42 +1,43 @@
-import { useCart } from '../context/CartContext'
-import { useState, useMemo, useEffect } from 'react'
-import axios from 'axios'
-import toast from 'react-hot-toast'
-import { useRouter } from 'next/router'
+import { useCart } from '../context/CartContext';
+import { useState, useMemo, useEffect } from 'react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/router';
 
 export default function CheckoutPage() {
-const router = useRouter()
-  const { cart } = useCart()
-  const [couponCode, setCouponCode] = useState('')
-  const [discountInfo, setDiscountInfo] = useState(null)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const { cart } = useCart();
+
+  const [couponCode, setCouponCode] = useState('');
+  const [discountInfo, setDiscountInfo] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [shipping, setShipping] = useState({
     name: '',
     email: '',
     phone: '',
     address: ''
-  })
+  });
 
   const total = useMemo(() => {
     return cart.reduce((sum, item) => {
-      const price = parseFloat(item.price) || 0
-      return sum + price * item.quantity
-    }, 0)
-  }, [cart])
+      const price = parseFloat(item.price) || 0;
+      return sum + price * item.quantity;
+    }, 0);
+  }, [cart]);
 
   const applyCoupon = async () => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     if (!token) {
-      toast.error('🔒 Please log in to apply a coupon.')
-      router.push('/login')
-      return
+      toast.error('🔒 Please log in to apply a coupon.');
+      router.push('/login');
+      return;
     }
-  
-    setLoading(true)
-    setError('')
-  
+
+    setLoading(true);
+    setError('');
+
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/checkout/applyCoupon`,
@@ -47,60 +48,59 @@ const router = useRouter()
         {
           headers: { Authorization: `Bearer ${token}` }
         }
-      )
-  
-      setDiscountInfo(res.data)
-      localStorage.setItem('appliedCoupon', JSON.stringify(res.data))
-      toast.success(`✅ Coupon "${res.data.couponCode}" applied!`)
+      );
+
+      setDiscountInfo(res.data.result);
+      localStorage.setItem('appliedCoupon', JSON.stringify(res.data.result));
+      toast.success(`✅ Coupon "${res.data.result.couponCode}" applied!`);
     } catch (err) {
-      setError(err?.response?.data?.error || 'Something went wrong')
-      setDiscountInfo(null)
-      toast.error(err?.response?.data?.error || 'Failed to apply coupon')
+      setError(err?.response?.data?.error || 'Something went wrong');
+      setDiscountInfo(null);
+      toast.error(err?.response?.data?.error || 'Failed to apply coupon');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-  
+  };
 
   const removeCoupon = () => {
-    setDiscountInfo(null)
-    setCouponCode('')
-    localStorage.removeItem('appliedCoupon')
-    toast('🗑️ Coupon removed')
-  }
+    setDiscountInfo(null);
+    setCouponCode('');
+    localStorage.removeItem('appliedCoupon');
+    toast('🗑️ Coupon removed');
+  };
 
   useEffect(() => {
-    const savedCoupon = localStorage.getItem('appliedCoupon')
+    const savedCoupon = localStorage.getItem('appliedCoupon');
     if (savedCoupon) {
-      const parsed = JSON.parse(savedCoupon)
-      setDiscountInfo(parsed)
-      setCouponCode(parsed.couponCode)
+      const parsed = JSON.parse(savedCoupon);
+      setDiscountInfo(parsed);
+      setCouponCode(parsed.couponCode);
     }
-  }, [])
+  }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setShipping(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setShipping(prev => ({ ...prev, [name]: value }));
+  };
 
   const isCouponExpired = useMemo(() => {
-    if (!discountInfo?.expiresAt) return false
-    return new Date(discountInfo.expiresAt) < new Date()
-  }, [discountInfo])
+    if (!discountInfo?.expiresAt) return false;
+    return new Date(discountInfo.expiresAt) < new Date();
+  }, [discountInfo]);
 
   const handleCheckout = async () => {
     if (isCouponExpired) {
-      toast.error('❌ Coupon has expired. Please remove it and try again.')
-      return
+      toast.error('❌ Coupon has expired. Please remove it and try again.');
+      return;
     }
-  
-    const token = localStorage.getItem('token')
+
+    const token = localStorage.getItem('token');
     if (!token) {
-      toast.error('🔒 Please log in to proceed.')
-      router.push('/login')
-      return
+      toast.error('🔒 Please log in to proceed.');
+      router.push('/login');
+      return;
     }
-  
+
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/payments/createCheckoutSession`, {
         cartItems: cart,
@@ -108,30 +108,31 @@ const router = useRouter()
         discount: discountInfo
       }, {
         headers: { Authorization: `Bearer ${token}` }
-      })
-      window.location.href = res.data.result.url
+      });
+      window.location.href = res.data.result.url;
     } catch (err) {
-      console.error(err.response?.data || err.message)
-      alert('Checkout failed. Please check your inputs and try again.')
+      console.error(err.response?.data || err.message);
+      alert('Checkout failed. Please check your inputs and try again.');
     }
-  }
-  
+  };
 
   const discountedItems = useMemo(() => {
-    if (!discountInfo || isCouponExpired) return cart
-    const discountFactor = (total - discountInfo.finalAmount) / total
+    if (!discountInfo || isCouponExpired) return cart;
+
+    const discountFactor = (total - discountInfo.finalAmount) / total;
 
     return cart.map(item => {
-      const itemTotal = item.price * item.quantity
-      const itemDiscount = itemTotal * discountFactor
-      const discountedPrice = (itemTotal - itemDiscount) / item.quantity
+      const price = parseFloat(item.price) || 0;
+      const itemTotal = price * item.quantity;
+      const itemDiscount = itemTotal * discountFactor;
+      const discountedPrice = (itemTotal - itemDiscount) / item.quantity;
 
       return {
         ...item,
         discountedPrice: discountedPrice.toFixed(2)
-      }
-    })
-  }, [cart, discountInfo, total, isCouponExpired])
+      };
+    });
+  }, [cart, discountInfo, total, isCouponExpired]);
 
   return (
     <div className="flex flex-wrap gap-8 p-8 max-w-5xl mx-auto font-sans text-gray-800">
@@ -169,11 +170,11 @@ const router = useRouter()
               <div className="text-right">
                 {discountInfo && !isCouponExpired ? (
                   <>
-                    <div className="line-through text-sm text-gray-400">₹{item.price}</div>
+                    <div className="line-through text-sm text-gray-400">₹{parseFloat(item.price).toFixed(2)}</div>
                     <div className="text-pink-600 font-bold">₹{item.discountedPrice}</div>
                   </>
                 ) : (
-                  <div className="font-bold">₹{item.price}</div>
+                  <div className="font-bold">₹{parseFloat(item.price).toFixed(2)}</div>
                 )}
               </div>
             </div>
@@ -228,18 +229,17 @@ const router = useRouter()
 
         {/* Price Summary */}
         <div className="mt-6 space-y-2 text-sm">
-          <p>Subtotal: ₹{total}</p>
-          {discountInfo && (
+          <p>Subtotal: ₹{total.toFixed(2)}</p>
+          {discountInfo ? (
             <>
-              <p className="text-green-600">Discount ({discountInfo.couponCode}): -₹{discountInfo.discount}</p>
-              <p className="font-bold text-lg">Total: ₹{discountInfo.finalAmount}</p>
+              <p className="text-green-600">Discount ({discountInfo.couponCode}): -₹{discountInfo.discount.toFixed(2)}</p>
+              <p className="font-bold text-lg">Total: ₹{discountInfo.finalAmount.toFixed(2)}</p>
             </>
-          )}
-          {!discountInfo && (
-            <p className="font-bold text-lg">Total: ₹{total}</p>
+          ) : (
+            <p className="font-bold text-lg">Total: ₹{total.toFixed(2)}</p>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }

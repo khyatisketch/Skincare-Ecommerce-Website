@@ -1,5 +1,5 @@
 import { useCart } from '../context/CartContext'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import axios from 'axios'
 
 export default function CheckoutPage() {

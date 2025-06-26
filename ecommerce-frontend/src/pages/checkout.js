@@ -22,7 +22,7 @@ export default function CheckoutPage() {
   const handleCheckout = async () => {
     const token = localStorage.getItem('token')
     try {
-      const res = await axios.post('https://8bed-2405-201-5c2e-18bf-4116-9165-78b3-668b.ngrok-free.app/payments/createCheckoutSession', {
+      const res = await axios.post('https://skincare-ecommerce-website.onrender.com/payments/createCheckoutSession', {
         cartItems: cart,
         shipping
       }, {
@@ -75,7 +75,7 @@ export default function CheckoutPage() {
         <div className="max-h-72 overflow-y-auto divide-y divide-gray-100">
           {cart.map((item, idx) => (
             <div key={idx} className="flex items-center gap-4 py-4">
-              <img src={item.imageUrl} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
+              <img src={item.imageUrl[0]} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
               <div className="flex-1">
                 <div className="font-medium">{item.name}</div>
                 <div className="text-sm text-gray-500">{item.size}</div>

@@ -28,7 +28,7 @@ export default function CheckoutPage() {
     setLoading(true)
     setError('')
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/coupons/checkout/applyCoupon`, {
+      const res = await axios.post(`https://skincare-ecommerce-website.onrender.com/coupons/checkout/applyCoupon`, {
         code: couponCode,
         orderTotal: total
       })
@@ -78,7 +78,7 @@ export default function CheckoutPage() {
 
     const token = localStorage.getItem('token')
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/payments/createCheckoutSession`, {
+      const res = await axios.post(`https://skincare-ecommerce-website.onrender.com/payments/createCheckoutSession`, {
         cartItems: cart,
         shipping,
         discount: discountInfo
@@ -177,7 +177,7 @@ export default function CheckoutPage() {
               </button>
             ) : (
               <button
-                className="bg-black text-white px-4 py-2 rounded-md"
+                className="p-4 bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-lg transition duration-300"
                 onClick={applyCoupon}
                 disabled={loading}
               >

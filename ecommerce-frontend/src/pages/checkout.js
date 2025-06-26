@@ -32,8 +32,10 @@ const router = useRouter()
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/checkout/applyCoupon`, {
         code: couponCode,
-        orderTotal: total
-      })
+        orderTotal: total},
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        })
       setDiscountInfo(res.data)
       localStorage.setItem('appliedCoupon', JSON.stringify(res.data))
       toast.success(`✅ Coupon "${res.data.couponCode}" applied!`)

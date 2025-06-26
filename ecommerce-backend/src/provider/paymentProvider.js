@@ -29,8 +29,8 @@ const createCheckoutSessionProvider = async (data) => {
         phone: shipping.phone,
         cartSummary,
       },
-      success_url: `http://localhost:3000/success`,
-      cancel_url: `http://localhost:3000/cancel`,
+      success_url: `https://skincare-ecommerce-website.vercel.app/orders`,
+      cancel_url: `https://skincare-ecommerce-website.vercel.app`,
     });
 
     return { url: session.url };  // ✅ Also fixed: returning instead of using `res.json(...)`

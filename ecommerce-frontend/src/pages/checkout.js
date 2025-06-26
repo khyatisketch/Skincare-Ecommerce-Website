@@ -69,14 +69,12 @@ export default function CheckoutPage() {
     }
   }
 
-  const { subtotal, total } = useMemo(() => {
-    const subtotal = cart.reduce((sum, item) => {
-      const price = parseFloat(item.price) || 0;
-      return sum + price * item.quantity;
-    }, 0);
-  
-    return { subtotal, total: subtotal };
-  }, [cart]);
+    const total = useMemo(() => {
+      return cart.reduce((sum, item) => {
+        const price = parseFloat(item.price) || 0;
+        return sum + price * item.quantity;
+      }, 0);
+    }, [cart]);
   
   // const applyCoupon = async () => {
   //   try {

@@ -16,7 +16,7 @@ export default function AdminCouponsPage() {
 
   const fetchCoupons = async () => {
     try {
-      const res = await axios.get('/api/admin/coupons')
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/admin/coupons`)
       setCoupons(res.data)
     } catch (err) {
       toast.error('Failed to fetch coupons', err)
@@ -26,7 +26,7 @@ export default function AdminCouponsPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await axios.post('/api/admin/coupons', form)
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/admin/coupons`, form)
       toast.success('Coupon created!')
       setForm({
         code: '',
@@ -45,7 +45,7 @@ export default function AdminCouponsPage() {
   const handleDelete = async (id) => {
     if (!confirm('Delete this coupon?')) return
     try {
-      await axios.delete(`/api/admin/coupons/${id}`)
+      await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/admin/coupons/${id}`)
       toast.success('Deleted!')
       fetchCoupons()
     } catch (err) {

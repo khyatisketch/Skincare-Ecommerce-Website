@@ -129,7 +129,7 @@ export default function CheckoutPage() {
 
       return {
         ...item,
-        discountedPrice: discountedPrice.toFixed(2)
+        discountedPrice: (discountedPrice ?? price).toFixed(2)
       };
     });
   }, [cart, discountInfo, total, isCouponExpired]);
@@ -159,26 +159,29 @@ export default function CheckoutPage() {
       <div className="flex-1 min-w-[300px] bg-white p-8 rounded-xl shadow-md">
         <h3 className="text-xl font-semibold mb-4">Bag ({cart.length} Items)</h3>
         <div className="max-h-72 overflow-y-auto divide-y divide-gray-100">
-          {discountedItems.map((item, idx) => (
-            <div key={idx} className="flex items-center gap-4 py-4">
-              <img src={item.imageUrl[0]} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
-              <div className="flex-1">
-                <div className="font-medium">{item.name}</div>
-                <div className="text-sm text-gray-500">{item.size}</div>
-                <div className="text-sm">Qty: {item.quantity}</div>
+          {discountedItems.map((item, idx) => {
+            const originalPrice = (parseFloat(item.price) || 0).toFixed(2);
+            return (
+              <div key={idx} className="flex items-center gap-4 py-4">
+                <img src={item.imageUrl[0]} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
+                <div className="flex-1">
+                  <div className="font-medium">{item.name}</div>
+                  <div className="text-sm text-gray-500">{item.size}</div>
+                  <div className="text-sm">Qty: {item.quantity}</div>
+                </div>
+                <div className="text-right">
+                  {discountInfo && !isCouponExpired ? (
+                    <>
+                      <div className="line-through text-sm text-gray-400">₹{originalPrice}</div>
+                      <div className="text-pink-600 font-bold">₹{item.discountedPrice ?? originalPrice}</div>
+                    </>
+                  ) : (
+                    <div className="font-bold">₹{originalPrice}</div>
+                  )}
+                </div>
               </div>
-              <div className="text-right">
-                {discountInfo && !isCouponExpired ? (
-                  <>
-                    <div className="line-through text-sm text-gray-400">₹{parseFloat(item.price).toFixed(2)}</div>
-                    <div className="text-pink-600 font-bold">₹{item.discountedPrice}</div>
-                  </>
-                ) : (
-                  <div className="font-bold">₹{parseFloat(item.price).toFixed(2)}</div>
-                )}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Coupon Form */}
@@ -232,8 +235,12 @@ export default function CheckoutPage() {
           <p>Subtotal: ₹{total.toFixed(2)}</p>
           {discountInfo ? (
             <>
-              <p className="text-green-600">Discount ({discountInfo.couponCode}): -₹{discountInfo.discount.toFixed(2)}</p>
-              <p className="font-bold text-lg">Total: ₹{discountInfo.finalAmount.toFixed(2)}</p>
+              <p className="text-green-600">
+                Discount ({discountInfo?.couponCode || ''}): -₹{(discountInfo?.discount ?? 0).toFixed(2)}
+              </p>
+              <p className="font-bold text-lg">
+                Total: ₹{(discountInfo?.finalAmount ?? total).toFixed(2)}
+              </p>
             </>
           ) : (
             <p className="font-bold text-lg">Total: ₹{total.toFixed(2)}</p>

@@ -34,25 +34,16 @@ export default function Orders() {
   const handleReorder = (orderItems) => {
     try {
       const existingCart = JSON.parse(localStorage.getItem('cart')) || []
-  
       const updatedCart = [...existingCart]
   
       for (let item of orderItems) {
         const product = item.product
-  
-        if (!product) continue // skip if product info is missing
+        if (!product) continue
   
         const existingItemIndex = updatedCart.findIndex(
           (cartItem) => cartItem.id === product.id
         )
   
-        console.log('Product being added:', {
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            imageUrl: product.imageUrl,
-            quantity: item.quantity
-          })
         if (existingItemIndex !== -1) {
           updatedCart[existingItemIndex].quantity += item.quantity
         } else {
@@ -67,12 +58,15 @@ export default function Orders() {
       }
   
       localStorage.setItem('cart', JSON.stringify(updatedCart))
+      localStorage.removeItem('appliedCoupon') // clear previous coupon (optional)
       alert('Items added to cart!')
+      router.push('/checkout') // direct user to checkout right after reorder
     } catch (err) {
       console.error('Reorder failed:', err)
       alert('Something went wrong while adding items to cart.')
     }
   }
+  
   
   
 

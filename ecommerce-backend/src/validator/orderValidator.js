@@ -1,14 +1,16 @@
 const { Validator } = require('node-input-validator');
 
 const createOrderValidator = async (dataObj) => {
-  const { items, userId, shippingAddress } = dataObj;
+  const { items, userId, shippingAddress, couponId, total } = dataObj;
 
   const rules = {
     userId: 'required|string',
     items: 'required|array',
     'items.*.productId': 'required|string',
     'items.*.quantity': 'required|integer|min:1',
-    shippingAddress: 'required|string'  // Add validation for shippingAddress
+    shippingAddress: 'required|string',
+    total: 'required|numeric|min:0',
+    couponId: 'string|nullable'
   };
 
   const validation = new Validator(dataObj, rules);
@@ -25,8 +27,9 @@ const createOrderValidator = async (dataObj) => {
     throw errors;
   }
 
-  return { userId, items, shippingAddress };
-};
+  return { userId, items, shippingAddress, couponId, total };
+}
+
 
 
 const getMyOrdersValidator = async (userId) => {

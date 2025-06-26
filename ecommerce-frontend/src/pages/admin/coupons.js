@@ -22,7 +22,7 @@ export default function AdminCouponsPage() {
 
   const fetchCoupons = async () => {
     try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/getAllCoupons`, {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/admin/coupons`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       setCoupons(res.data.result || [])
@@ -43,8 +43,8 @@ export default function AdminCouponsPage() {
     e.preventDefault()
     try {
       const url = editingCoupon
-        ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/updateCoupon/${editingCoupon.id}`
-        : `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/createCoupon`
+        ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/admin/coupons/${editingCoupon.id}`
+        : `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/admin/coupons`
 
       const method = editingCoupon ? 'put' : 'post'
 
@@ -78,7 +78,7 @@ export default function AdminCouponsPage() {
   const handleDelete = async (id) => {
     if (!confirm('Delete this coupon?')) return
     try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/deleteCoupon/${id}`, {
+      await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/coupons/admin/coupons/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       toast.success('Deleted coupon')

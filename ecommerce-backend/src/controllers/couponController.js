@@ -17,7 +17,51 @@ const createCoupon = async (req, res) => {
     }
   };
 
-  const applyCoupon = async (req, res) => {
+const updateCoupon = async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      if (!req.body || !id) {
+        return _handleResponse(req, res, { error: 'Coupon ID and data are required' });
+      }
+  
+      const validatedData = await couponValidator.updateCouponValidator(req.body);
+      const result = await couponProvider.updateCouponProvider(id, validatedData);
+  
+      return _handleResponse(req, res, null, result, 'Coupon updated successfully');
+    } catch (err) {
+      console.error('Error in Update Coupon Controller ::', err);
+      return _handleResponse(req, res, err);
+    }
+  };
+
+const getAllCoupons = async (req, res) => {
+    try {
+        const validatedQuery = await couponValidator.getAllCouponsValidator(req.query);
+        const result = await couponProvider.getAllCouponsProvider(validatedQuery);
+
+        return _handleResponse(req, res, null, result, "Fetched coupons successfully");
+    } catch (err) {
+        console.error("Error in getAllCoupons Controller ::", err);
+        return _handleResponse(req, res, err);
+    }
+};
+
+const deleteCoupon = async (req, res) => {
+  try {
+      console.log("Coupon Delete Controller :::");
+
+      const validatedData = await couponValidator.deleteCouponValidator(req.params);
+      const result = await couponProvider.deleteCouponProvider(validatedData);
+
+      return _handleResponse(req, res, null, result, result.message);
+  } catch (err) {
+      console.error("Error in Delete Coupon Controller :: ", err);
+      return _handleResponse(req, res, err);
+  }
+};
+
+const applyCoupon = async (req, res) => {
     try {
         console.log("Apply Coupon Controller logic :::");
 
@@ -38,5 +82,8 @@ const createCoupon = async (req, res) => {
 
 module.exports = {
     createCoupon,
-    applyCoupon
+    updateCoupon,
+    applyCoupon,
+    getAllCoupons,
+    deleteCoupon
 }

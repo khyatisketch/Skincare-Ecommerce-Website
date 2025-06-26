@@ -13,7 +13,39 @@ const createCouponProvider = async (couponData) => {
     }
   };
 
-  const applyCouponProvider = async ({ code, orderTotal }) => {
+  const updateCouponProvider = async (id, updateData) => {
+    try {
+      const updatedCoupon = await prisma.coupon.update({
+        where: { id },
+        data: updateData,
+      });
+  
+      return updatedCoupon;
+    } catch (error) {
+      console.error('Error in Update Coupon Provider ::', error);
+      throw error;
+    }
+  };
+
+  const getAllCouponsProvider = async () => {
+    try {
+        const coupons = await prisma.coupon.findMany({
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
+
+        return {
+            coupons,
+        };
+    } catch (error) {
+        console.error("Error in getAllCoupons Provider ::", error);
+        throw error;
+    }
+};
+  
+
+const applyCouponProvider = async ({ code, orderTotal }) => {
     try {
         const coupon = await prisma.coupon.findUnique({
             where: { code }
@@ -57,8 +89,26 @@ const createCouponProvider = async (couponData) => {
     }
 };
 
+const deleteCouponProvider = async ({ id }) => {
+  try {
+      await prisma.coupon.delete({
+          where: { id }
+      });
+
+      return {
+          message: 'Coupon deleted successfully',
+      };
+  } catch (error) {
+      console.error("Error in Delete Coupon Provider ::", error);
+      throw error;
+  }
+};
+
   
   module.exports = {
     createCouponProvider,
-    applyCouponProvider
+    updateCouponProvider,
+    applyCouponProvider,
+    getAllCouponsProvider,
+    deleteCouponProvider
   };

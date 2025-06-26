@@ -17,12 +17,18 @@ const createCoupon = async (req, res) => {
     }
   };
 
-const updateCoupon = async (req, res) => {
+  const updateCoupon = async (req, res) => {
     try {
-      const { id } = req.params;
+      let { id } = req.params;
   
       if (!req.body || !id) {
         return _handleResponse(req, res, { error: 'Coupon ID and data are required' });
+      }
+  
+      // 🔧 Convert id to number if Prisma expects Int
+      id = parseInt(id);
+      if (isNaN(id)) {
+        return _handleResponse(req, res, { error: 'Invalid coupon ID format' });
       }
   
       const validatedData = await couponValidator.updateCouponValidator(req.body);
@@ -34,6 +40,7 @@ const updateCoupon = async (req, res) => {
       return _handleResponse(req, res, err);
     }
   };
+  
 
 const getAllCoupons = async (req, res) => {
     try {

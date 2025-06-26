@@ -5,8 +5,8 @@ import { motion } from 'framer-motion'
 
 export default function HomeHero() {
   return (
-    <section className="relative bg-pink-50 min-h-[90vh] flex items-center">
-      <div className="max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-12">
+    <section className="relative bg-[#fef7f8] min-h-[90vh] flex items-center font-sans">
+      <div className="max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-12 py-12">
         
         {/* Text Content */}
         <motion.div
@@ -15,15 +15,15 @@ export default function HomeHero() {
           transition={{ duration: 0.7 }}
           className="w-full md:w-1/2 text-center md:text-left"
         >
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 leading-tight">
+          <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-[#2f2f2f] leading-tight font-serif">
             Your Skin, But Better.
           </h1>
-          <p className="mt-4 text-lg text-gray-600 max-w-md">
+          <p className="mt-6 text-lg md:text-xl text-gray-700 max-w-md leading-relaxed">
             Clean, gentle skincare designed to hydrate, nourish, and glow with every drop.
           </p>
           <Link
             href="/products"
-            className="inline-block mt-6 bg-black text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition"
+            className="inline-block mt-8 bg-black text-white px-7 py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition shadow-md"
           >
             Shop Now
           </Link>
@@ -36,14 +36,16 @@ export default function HomeHero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="w-full md:w-1/2 flex justify-center"
         >
-          <Image
-            src="/hero_skincare.jpg" // Replace this with your product image
-            alt="Skincare Product"
-            width={500}
-            height={500}
-            className="object-contain rounded-xl shadow-xl"
-            priority
-          />
+          <div className="rounded-3xl shadow-xl overflow-hidden bg-[#fef7f8] p-4">
+            <Image
+              src="/hero-skincare.jpg"
+              alt="Skincare Product"
+              width={480}
+              height={480}
+              className="object-contain"
+              priority
+            />
+          </div>
         </motion.div>
       </div>
     </section>

@@ -55,7 +55,8 @@ export default function CartDrawer() {
         <div className={styles.body}>
           {cart.map(item => (
             <div key={item.id} className={styles.item}>
-              <img src={item.imageUrl} alt={item.name} className={styles.image} />
+             <img src={item.imageUrl.split(',')[0]} alt={item.name} className={styles.image} />
+
               <div className={styles.details}>
                 <h4>{item.name}</h4>
                 <p>Rs. {item.price}</p>

@@ -3,12 +3,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import FeaturedProducts from '../components/FeaturedProducts'
-import Navbar from '../components/Navbar'
 
 export default function HomeHero() {
   return (
     <>
-      <Navbar/>
     <section className="relative bg-[#fef7f8] min-h-[90vh] flex items-center font-sans">
       <div className="max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-12 py-12">
         

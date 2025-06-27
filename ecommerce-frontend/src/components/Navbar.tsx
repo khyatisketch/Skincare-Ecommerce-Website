@@ -1,11 +1,11 @@
 'use client'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { ShoppingCart, User, ChevronDown } from 'lucide-react'
 
 export default function Navbar() {
-  const router = useRouter()
+//   const router = useRouter()
   const [showDropdown, setShowDropdown] = useState(false)
 
   const categories = [

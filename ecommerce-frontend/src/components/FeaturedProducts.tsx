@@ -103,7 +103,7 @@ export default function FeaturedProducts() {
                   )}
 
                   <Image
-                    src={product.imageUrl?.[0] || fallbackImage}
+                    src={product.imageUrl[0] || fallbackImage}
                     alt={product.name}
                     width={400}
                     height={400}

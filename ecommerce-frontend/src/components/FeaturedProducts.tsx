@@ -20,7 +20,7 @@ export default function FeaturedProducts() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products/getAllProducts`)
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/getAllProducts`)
         setProducts(res.data?.result?.products?.slice(0, 3) || [])
       } catch (err) {
         toast.error('Failed to load products')

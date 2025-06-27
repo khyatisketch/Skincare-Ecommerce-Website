@@ -71,7 +71,7 @@ export default function FeaturedProducts() {
           Best Sellers
         </h2>
         <p className="text-gray-500 mb-12 text-lg">
-          Discover formulas our customers can't get enough of
+          Discover formulas our customers can&rsquo;t get enough of
         </p>
   
         <div className="grid gap-8 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

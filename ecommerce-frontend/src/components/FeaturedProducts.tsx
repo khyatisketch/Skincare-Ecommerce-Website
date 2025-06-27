@@ -10,7 +10,9 @@ interface Product {
   id: number
   name: string
   price: number
-  images: string[]
+  imageUrl: string[]
+  stock: number
+  createdAt: string
 }
 
 export default function FeaturedProducts() {
@@ -21,7 +23,8 @@ export default function FeaturedProducts() {
     const fetchProducts = async () => {
       try {
         const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/getAllProducts`)
-        setProducts(res.data?.result?.products?.slice(0, 3) || [])
+        const productList: Product[] = res.data?.result?.data?.slice(0, 8) || []
+        setProducts(productList)
       } catch (err) {
         toast.error('Failed to load products')
         console.error(err)
@@ -32,7 +35,34 @@ export default function FeaturedProducts() {
     fetchProducts()
   }, [])
 
-  const fallbackImage = '/placeholder.jpg' // Make sure this image exists in /public
+  const fallbackImage = '/placeholder.jpg'
+
+  // 🧠 Utility to determine label
+  const getProductLabel = (product: Product) => {
+    const createdAt = new Date(product.createdAt)
+    const now = new Date()
+    const diffDays = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24)
+
+    if (diffDays <= 7) return 'new'
+    if (product.stock > 50) return 'best-seller'
+    if (product.stock < 10) return 'low-stock'
+    return null
+  }
+
+  const badgeMap: Record<string, { text: string; className: string }> = {
+    'best-seller': {
+      text: '✨ Best Seller',
+      className: 'bg-yellow-200 text-yellow-800',
+    },
+    new: {
+      text: '🆕 New Arrival',
+      className: 'bg-pink-200 text-pink-800',
+    },
+    'low-stock': {
+      text: '⏳ Almost Gone',
+      className: 'bg-red-200 text-red-800',
+    },
+  }
 
   return (
     <section className="py-20 px-6 md:px-12 bg-white">
@@ -54,34 +84,43 @@ export default function FeaturedProducts() {
               </div>
             ))
           ) : (
-            products.map((product) => (
-              <div
-                key={product.id}
-                className="relative rounded-2xl border bg-pink-50 p-5 shadow-md hover:shadow-xl transition-all"
-              >
-                {/* Best Seller Badge */}
-                <span className="absolute top-3 left-3 bg-yellow-200 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
-                  ✨ Best Seller
-                </span>
+            products.map((product) => {
+              const label = getProductLabel(product)
+              const badge = label ? badgeMap[label] : null
 
-                <Image
-                  src={product.images?.[0] || fallbackImage}
-                  alt={product.name}
-                  width={400}
-                  height={400}
-                  className="rounded-lg object-cover mb-4 h-56 w-full"
-                />
-
-                <h3 className="text-xl font-medium text-gray-800 mb-1">{product.name}</h3>
-                <p className="text-gray-600 mb-4">₹{product.price}</p>
-                <Link
-                  href={`/products/${product.id}`}
-                  className="inline-block bg-black text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-800 transition"
+              return (
+                <div
+                  key={product.id}
+                  className="relative rounded-2xl border bg-pink-50 p-5 shadow-md hover:shadow-xl transition-all"
                 >
-                  Shop Now
-                </Link>
-              </div>
-            ))
+                  {/* Dynamic Badge */}
+                  {badge && (
+                    <span
+                      className={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full shadow-sm ${badge.className}`}
+                    >
+                      {badge.text}
+                    </span>
+                  )}
+
+                  <Image
+                    src={product.imageUrl?.[0] || fallbackImage}
+                    alt={product.name}
+                    width={400}
+                    height={400}
+                    className="rounded-lg object-cover mb-4 h-56 w-full"
+                  />
+
+                  <h3 className="text-xl font-medium text-gray-800 mb-1">{product.name}</h3>
+                  <p className="text-gray-600 mb-4">₹{product.price}</p>
+                  <Link
+                    href={`/products/${product.id}`}
+                    className="inline-block bg-black text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-800 transition"
+                  >
+                    Shop Now
+                  </Link>
+                </div>
+              )
+            })
           )}
         </div>
       </div>

@@ -23,7 +23,7 @@ export default function FeaturedProducts() {
     const fetchProducts = async () => {
       try {
         const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/getAllProducts`)
-        const productList: Product[] = res.data?.result?.data?.slice(0, 8) || []
+        const productList: Product[] = res.data?.result?.data?.slice(0, 9) || []
         setProducts(productList)
       } catch (err) {
         toast.error('Failed to load products')
@@ -67,57 +67,68 @@ export default function FeaturedProducts() {
   return (
     <section className="py-20 px-6 md:px-12 bg-white">
       <div className="max-w-7xl mx-auto text-center">
-        <h2 className="text-4xl font-serif font-semibold text-gray-900 mb-4">Best Sellers</h2>
-        <p className="text-gray-500 mb-12 text-lg">Shop our most loved skincare formulas</p>
-
-        <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+        <h2 className="text-4xl font-serif font-semibold text-gray-900 mb-4 tracking-tight">
+          Best Sellers
+        </h2>
+        <p className="text-gray-500 mb-12 text-lg">
+          Discover formulas our customers can't get enough of
+        </p>
+  
+        <div className="grid gap-8 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {loading ? (
-            Array(3).fill(0).map((_, idx) => (
-              <div
-                key={idx}
-                className="animate-pulse rounded-2xl border bg-pink-50 p-5 shadow-md h-[400px]"
-              >
-                <div className="bg-gray-300 h-56 w-full rounded-lg mb-4" />
-                <div className="h-5 bg-gray-300 rounded w-3/4 mb-2" />
-                <div className="h-4 bg-gray-200 rounded w-1/3 mb-4" />
-                <div className="h-8 bg-gray-300 rounded-full w-24 mx-auto" />
-              </div>
-            ))
+            Array(6)
+              .fill(0)
+              .map((_, idx) => (
+                <div
+                  key={idx}
+                  className="animate-pulse rounded-2xl border bg-pink-50 p-5 shadow-sm h-[400px]"
+                >
+                  <div className="bg-gray-300 h-48 w-full rounded-lg mb-4" />
+                  <div className="h-5 bg-gray-300 rounded w-3/4 mb-2" />
+                  <div className="h-4 bg-gray-200 rounded w-1/3 mb-4" />
+                  <div className="h-8 bg-gray-300 rounded-full w-24 mx-auto" />
+                </div>
+              ))
           ) : (
             products.map((product) => {
               const label = getProductLabel(product)
               const badge = label ? badgeMap[label] : null
-
+  
               return (
                 <div
                   key={product.id}
-                  className="relative rounded-2xl border bg-pink-50 p-5 shadow-md hover:shadow-xl transition-all"
+                  className="relative rounded-xl bg-white border border-gray-200 p-4 shadow-sm hover:shadow-lg transition-all"
                 >
-                  {/* Dynamic Badge */}
                   {badge && (
                     <span
-                      className={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full shadow-sm ${badge.className}`}
+                      className={`absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm ${badge.className}`}
                     >
                       {badge.text}
                     </span>
                   )}
-
-                  <Image
-                    src={product.imageUrl[0] || fallbackImage}
-                    alt={product.name}
-                    width={400}
-                    height={400}
-                    className="rounded-lg object-cover mb-4 h-56 w-full"
-                  />
-
-                  <h3 className="text-xl font-medium text-gray-800 mb-1">{product.name}</h3>
-                  <p className="text-gray-600 mb-4">₹{product.price}</p>
-                  <Link
-                    href={`/products/${product.id}`}
-                    className="inline-block bg-black text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-800 transition"
-                  >
-                    Shop Now
+  
+                  <Link href={`/products/${product.id}`}>
+                    <div className="aspect-[4/5] mb-4 overflow-hidden rounded-lg">
+                      <Image
+                        src={product.imageUrl[0] || fallbackImage}
+                        alt={product.name}
+                        width={400}
+                        height={500}
+                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                      />
+                    </div>
                   </Link>
+  
+                  <div className="text-left">
+                    <h3 className="text-md font-semibold text-gray-800">{product.name}</h3>
+                    <p className="text-sm text-gray-500 mb-3">₹{product.price}</p>
+                    <Link
+                      href={`/products/${product.id}`}
+                      className="inline-block border border-black text-black px-4 py-1.5 rounded-full text-sm font-medium hover:bg-black hover:text-white transition"
+                    >
+                      Shop Now
+                    </Link>
+                  </div>
                 </div>
               )
             })
@@ -126,4 +137,5 @@ export default function FeaturedProducts() {
       </div>
     </section>
   )
+  
 }

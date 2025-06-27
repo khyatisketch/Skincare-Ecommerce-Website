@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import FeaturedProducts from '../components/FeaturedProducts'
+import Navbar from '../components/Navbar'
 
 export default function HomeHero() {
   return (
@@ -52,6 +53,7 @@ export default function HomeHero() {
       </div>
     </section>
         <FeaturedProducts />
+        <Navbar/>
         </>
   )
 }

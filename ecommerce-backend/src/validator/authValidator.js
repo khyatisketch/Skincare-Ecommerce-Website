@@ -39,7 +39,7 @@ const verifyOtpValidatorObj = async function (dataObj) {
 
 const updateProfileValidator = async (data) => {
     const rules = {
-      name: 'required|string|min:1|max:50',
+      name: 'required|string|lengthBetween:1,50',
       email: 'required|email',
       profileImageUrl: 'string' // removed `url` validation
     };

@@ -39,10 +39,17 @@ const verifyOtp = async (req, res) => {
 
 const updateProfile = async (req, res) => {
     try {
+      console.log("Incoming body:", req.body);
+console.log("Incoming file:", req.file);
+
       // Trim inputs to avoid accidental spaces
-      const name = req.body.name?.trim();
-      const email = req.body.email?.trim();
+      // const name = req.body.name?.trim();
+      // const email = req.body.email?.trim();
   
+      const name = (req.body.name || '').trim();
+      const email = (req.body.email || '').trim();
+      
+
       if (!name || !email) {
         return _handleResponse(req, res, { error: 'Name and Email are required' });
       }
@@ -55,7 +62,7 @@ const updateProfile = async (req, res) => {
         profileImageUrl,
       });
   
-      const userId = req.user.id;
+      const userId = req.user.userId;
       const result = await authProvider.updateProfileProvider(userId, validatedData);
   
       return _handleResponse(req, res, null, result, result.message);

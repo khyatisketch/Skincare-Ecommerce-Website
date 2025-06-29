@@ -37,7 +37,27 @@ const verifyOtp = async (req, res) => {
     }
 };
 
+const updateProfile = async (req, res) => {
+    try {
+        if (!req.body) {
+            return _handleResponse(req, res, { error: 'Request body is empty' });
+        }
+
+        const validatedData = await authValidator.updateProfileValidator(req.body);
+        const userId = req.user.id;
+
+        const result = await authProvider.updateProfileProvider(userId, validatedData);
+
+        return _handleResponse(req, res, null, result, result.message);
+
+    } catch (error) {
+        console.error("Error in updateProfile Controller :: ", error);
+        return _handleResponse(req, res, error);
+    }
+};
+
 module.exports = {
     requestOtp,
-    verifyOtp
+    verifyOtp,
+    updateProfile
 }

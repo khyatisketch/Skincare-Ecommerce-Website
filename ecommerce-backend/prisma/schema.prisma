@@ -13,6 +13,7 @@ model User {
   email     String?
   name      String?
   address   String?
+  profileImageUrl String? 
   role      Role       @default(USER)
   createdAt DateTime   @default(now())
   orders    Order[]

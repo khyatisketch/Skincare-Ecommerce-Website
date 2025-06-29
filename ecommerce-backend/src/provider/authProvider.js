@@ -1,8 +1,8 @@
 const prisma = require('../prisma');
 const jwt = require('jsonwebtoken');
-const {generateOtp} = require ('../utils/commonHelper')
+const { generateOtp } = require('../utils/commonHelper')
 
-  const requestOtpProvider = async ({ phone }) => {
+const requestOtpProvider = async ({ phone }) => {
     try {
         const otpCode = generateOtp();
         const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 mins
@@ -26,7 +26,6 @@ const {generateOtp} = require ('../utils/commonHelper')
     }
 };
 
-
 const verifyOtpProvider = async ({ phone, code }) => {
     try {
         const otp = await prisma.otp.findFirst({
@@ -49,11 +48,13 @@ const verifyOtpProvider = async ({ phone, code }) => {
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
+        const profileIncomplete = !user.email || !user.name;
 
         return {
             token,
             user,
             message: 'OTP verified and user logged in successfully',
+            profileIncomplete,
         };
     } catch (err) {
         console.error("Error in verifyOtpProvider:", err);
@@ -61,7 +62,25 @@ const verifyOtpProvider = async ({ phone, code }) => {
     }
 };
 
+const updateProfileProvider = async (userId, { name, email }) => {
+    try {
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: { name, email }
+        });
+
+        return {
+            message: 'Profile updated successfully',
+            user: updatedUser
+        };
+    } catch (error) {
+        console.error("Error in updateProfile Provider ::", error);
+        throw error;
+    }
+};
+
 module.exports = {
     requestOtpProvider,
-    verifyOtpProvider
+    verifyOtpProvider,
+    updateProfileProvider
 }

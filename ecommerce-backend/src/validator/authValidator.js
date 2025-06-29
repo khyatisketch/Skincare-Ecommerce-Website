@@ -37,7 +37,27 @@ const verifyOtpValidatorObj = async function (dataObj) {
     return { phone, code };
 };
 
+const updateProfileValidator = async (data) => {
+    const rules = {
+        name: 'required|string|min:2|max:50',
+        email: 'required|email'
+    };
+
+    const v = new Validator(data, rules);
+    const matched = await v.check();
+
+    if (!matched) {
+        throw v.errors;
+    }
+
+    return {
+        name: data.name,
+        email: data.email
+    };
+};
+
 module.exports = {
     otpValidatorObj,
-    verifyOtpValidatorObj
+    verifyOtpValidatorObj,
+    updateProfileValidator
 }

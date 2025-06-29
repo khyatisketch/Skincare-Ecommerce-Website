@@ -55,20 +55,26 @@ export default function Login() {
     try {
       setLoading(true)
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/verify-otp`, { phone, code: otp })
-      localStorage.setItem('token', res.data.result.token)
+      const { token, profileIncomplete } = res.data.result
+  
+      localStorage.setItem('token', token)
       login(res.data.result)
+  
       setMessage('Logged in successfully!')
-
-      // redirect after login: check if redirect param exists
-      const redirectTo = router.query.redirect || '/'
-      router.push(redirectTo)
+  
+      if (profileIncomplete) {
+        router.push('/profile-setup') // ✅ redirect to profile setup page
+      } else {
+        const redirectTo = router.query.redirect || '/'
+        router.push(redirectTo)
+      }
     } catch (err) {
       setMessage(err?.response?.data?.message || 'OTP verification failed')
     } finally {
       setLoading(false)
     }
   }
-
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-purple-100 flex items-center justify-center px-4">
       <div className="bg-white/70 backdrop-blur-lg shadow-lg rounded-3xl px-8 py-10 w-full max-w-md relative">

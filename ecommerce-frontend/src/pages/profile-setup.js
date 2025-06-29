@@ -7,13 +7,41 @@ export default function ProfileSetup() {
   const router = useRouter()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [profileImage, setProfileImage] = useState(null)
+  const [previewUrl, setPreviewUrl] = useState(null)
   const [message, setMessage] = useState('')
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setProfileImage(file)
+      setPreviewUrl(URL.createObjectURL(file))
+    }
+  }
 
   const handleSave = async () => {
     try {
       const token = localStorage.getItem('token')
+      let imageUrl = null
+
+      // If profile image is selected, upload it (e.g., to Cloudinary)
+      if (profileImage) {
+        const formData = new FormData()
+        formData.append('file', profileImage)
+        formData.append('upload_preset', 'your_upload_preset') // ⬅️ Replace with your Cloudinary preset
+
+        const uploadRes = await axios.post(
+          'https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', // ⬅️ Replace with your Cloudinary cloud name
+          formData
+        )
+
+        imageUrl = uploadRes.data.secure_url
+      }
+
       await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users/update-profile`, {
-        name, email
+        name,
+        email,
+        profileImageUrl: imageUrl
       }, {
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -53,6 +81,30 @@ export default function ProfileSetup() {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
             />
           </div>
+        </div>
+
+        {/* Profile Image Upload */}
+        <div className="mt-6">
+          <label className="block text-sm text-gray-700 mb-1">Upload Profile Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+            id="profileImageUpload"
+          />
+          <label
+            htmlFor="profileImageUpload"
+            className="inline-block mt-1 px-5 py-2 bg-[#e60073] text-white rounded-md cursor-pointer hover:bg-pink-700 transition"
+          >
+            Select Image
+          </label>
+
+          {previewUrl && (
+            <div className="mt-4">
+              <img src={previewUrl} alt="Preview" className="h-32 w-32 object-cover rounded-full border" />
+            </div>
+          )}
         </div>
 
         <button

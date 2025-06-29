@@ -62,23 +62,27 @@ const verifyOtpProvider = async ({ phone, code }) => {
     }
 };
 
-const updateProfileProvider = async (userId, { name, email }) => {
+const updateProfileProvider = async (userId, { name, email, profileImageUrl }) => {
     try {
-        const updatedUser = await prisma.user.update({
-            where: { id: userId },
-            data: { name, email }
-        });
-
-        return {
-            message: 'Profile updated successfully',
-            user: updatedUser
-        };
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+          name,
+          email,
+          ...(profileImageUrl && { profileImageUrl }) // ✅ only update if provided
+        }
+      });
+  
+      return {
+        message: 'Profile updated successfully',
+        user: updatedUser
+      };
     } catch (error) {
-        console.error("Error in updateProfile Provider ::", error);
-        throw error;
+      console.error("Error in updateProfile Provider ::", error);
+      throw error;
     }
-};
-
+  };
+  
 module.exports = {
     requestOtpProvider,
     verifyOtpProvider,

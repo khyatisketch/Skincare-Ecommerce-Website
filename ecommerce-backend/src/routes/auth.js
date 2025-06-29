@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
+const { verifyJWT} = require('../utils/authMiddleware')
+const { upload } = require('../middleware/cloudinary');
 
 router.post('/request-otp', authController.requestOtp);
 router.post('/verify-otp', authController.verifyOtp);
-router.put('/update-profile', verifyJWT, authController.updateProfile);
-
+router.put('/update-profile', verifyJWT,upload.single('profileImage'), authController.updateProfile);
 module.exports = router;

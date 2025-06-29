@@ -7,48 +7,52 @@ export default function ProfileSetup() {
   const router = useRouter()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [profileImage, setProfileImage] = useState(null)
+  const [imageFile, setImageFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState(null)
   const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
-      setProfileImage(file)
+      setImageFile(file)
       setPreviewUrl(URL.createObjectURL(file))
     }
   }
 
   const handleSave = async () => {
     try {
+      setLoading(true)
       const token = localStorage.getItem('token')
-      let imageUrl = null
-
-      // If profile image is selected, upload it (e.g., to Cloudinary)
-      if (profileImage) {
-        const formData = new FormData()
-        formData.append('file', profileImage)
-        formData.append('upload_preset', 'your_upload_preset') // ⬅️ Replace with your Cloudinary preset
-
-        const uploadRes = await axios.post(
-          'https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', // ⬅️ Replace with your Cloudinary cloud name
-          formData
-        )
-
-        imageUrl = uploadRes.data.secure_url
+      if (!token) {
+        setMessage('Please login first.')
+        return
       }
 
-      await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users/update-profile`, {
-        name,
-        email,
-        profileImageUrl: imageUrl
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      const formData = new FormData()
+      formData.append('name', name)
+      formData.append('email', email)
+      if (imageFile) {
+        formData.append('profileImage', imageFile) // send like 'imageUrl' in product page
+      }
+
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/update-profile`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
 
       router.push('/')
     } catch (err) {
+      console.error(err)
       setMessage(err.response?.data?.message || 'Profile update failed')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -102,16 +106,21 @@ export default function ProfileSetup() {
 
           {previewUrl && (
             <div className="mt-4">
-              <img src={previewUrl} alt="Preview" className="h-32 w-32 object-cover rounded-full border" />
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="h-32 w-32 object-cover rounded-full border"
+              />
             </div>
           )}
         </div>
 
         <button
           onClick={handleSave}
+          disabled={loading}
           className="mt-8 bg-[#e60073] hover:bg-pink-700 text-white px-6 py-3 rounded-md transition"
         >
-          Save & Continue
+          {loading ? 'Saving...' : 'Save & Continue'}
         </button>
 
         {message && (

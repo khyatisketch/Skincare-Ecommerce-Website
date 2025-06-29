@@ -41,7 +41,7 @@ const updateProfileValidator = async (data) => {
     const rules = {
       name: 'required|string|min:2|max:50',
       email: 'required|email',
-      profileImageUrl: 'string|url' // ✅ optional but validated if present
+      profileImageUrl: 'string' // removed `url` validation
     };
   
     const v = new Validator(data, rules);
@@ -54,9 +54,10 @@ const updateProfileValidator = async (data) => {
     return {
       name: data.name,
       email: data.email,
-      profileImageUrl: data.profileImageUrl || null
+      profileImageUrl: data.profileImageUrl || null,
     };
   };
+  
   
 
 module.exports = {

@@ -39,13 +39,14 @@ const verifyOtp = async (req, res) => {
 
 const updateProfile = async (req, res) => {
     try {
-      const { name, email } = req.body;
+      // Trim inputs to avoid accidental spaces
+      const name = req.body.name?.trim();
+      const email = req.body.email?.trim();
   
       if (!name || !email) {
         return _handleResponse(req, res, { error: 'Name and Email are required' });
       }
   
-      // If file was uploaded, get its path
       const profileImageUrl = req.file?.path;
   
       const validatedData = await authValidator.updateProfileValidator({
@@ -63,6 +64,7 @@ const updateProfile = async (req, res) => {
       return _handleResponse(req, res, error);
     }
   };
+  
   
 
 module.exports = {

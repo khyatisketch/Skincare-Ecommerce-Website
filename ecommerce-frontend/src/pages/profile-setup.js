@@ -25,34 +25,46 @@ export default function ProfileSetup() {
   }
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100 px-4">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-2xl font-semibold text-center mb-6">Complete Your Profile</h2>
+    <div className="min-h-screen bg-[#fef7f8] flex justify-center items-start px-4 py-16">
+      <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl border border-pink-200">
+        <h2 className="text-2xl font-semibold text-[#e60073] mb-6 border-b border-pink-200 pb-2">
+          Complete Your Profile
+        </h2>
 
-        <input
-          type="text"
-          placeholder="Your Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded-lg"
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm text-gray-700 mb-1">Your Name</label>
+            <input
+              type="text"
+              placeholder="E.g. Khyati"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+            />
+          </div>
 
-        <input
-          type="email"
-          placeholder="Your Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded-lg"
-        />
+          <div>
+            <label className="block text-sm text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              placeholder="E.g. khyati@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+            />
+          </div>
+        </div>
 
         <button
           onClick={handleSave}
-          className="w-full bg-black text-white py-3 rounded-lg"
+          className="mt-8 bg-[#e60073] hover:bg-pink-700 text-white px-6 py-3 rounded-md transition"
         >
-          Save and Continue
+          Save & Continue
         </button>
 
-        {message && <p className="text-center text-sm text-red-500 mt-4">{message}</p>}
+        {message && (
+          <p className="mt-4 text-sm text-center text-gray-700">{message}</p>
+        )}
       </div>
     </div>
   )

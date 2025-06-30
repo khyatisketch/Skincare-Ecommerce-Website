@@ -1,7 +1,7 @@
 'use client'
 import { useUser } from '@/context/UserContext'
 import Image from 'next/image'
-import Link from 'next/link'
+// import Link from 'next/link'
 
 export default function ProfilePage() {
   const { user } = useUser()

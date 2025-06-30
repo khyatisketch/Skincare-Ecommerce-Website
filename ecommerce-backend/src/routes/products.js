@@ -5,7 +5,7 @@ const { verifyJWT, authenticateJWT, authorizeAdmin } = require('../utils/authMid
 const { upload } = require('../middleware/cloudinary');
 
 
-router.post('/createProduct', authenticateJWT, authorizeAdmin,upload.array('imageUrl', 10), productController.createProduct)
+router.post('/createProduct', verifyJWT, authorizeAdmin,upload.array('imageUrl', 10), productController.createProduct)
 router.put('/updateProduct/:id', authenticateJWT, authorizeAdmin,upload.array('imageUrl', 10), productController.updateProduct)
 router.delete('/deleteProduct/:id', authenticateJWT, authorizeAdmin, productController.deleteProduct)
 router.get('/getAllProducts', productController.getAllProducts)

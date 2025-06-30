@@ -10,20 +10,16 @@ export default function Navbar() {
   const router = useRouter()
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
-  type Category = {
-    id: number
-    name: string
-  }
-  
-  const [categories, setCategories] = useState<Category[]>([])
-  
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  // ✅ Correct state for fetched category list
+
   const { user, setUser } = useUser()
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/categories/getAllCategories`)
-        setCategories(res.data.result.data)
+        setCategories(res.data.result.data) // ✅ Properly store category list
       } catch (err) {
         console.error('Failed to fetch categories:', err)
       }
@@ -62,24 +58,23 @@ export default function Navbar() {
             </button>
             {showCategoryDropdown && (
               <div className="absolute bg-white border rounded shadow-md mt-2 w-40 z-50">
-        {categories.length === 0 ? (
-  <p className="px-4 py-2 text-sm text-gray-500">No categories found.</p>
-) : (
-  categories.map((cat) => {
-    const slug = cat.name.toLowerCase().replace(/\s+/g, '-')
-    return (
-      <Link
-        key={cat.id}
-        href={`/products?category=${slug}`}
-        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-        onClick={() => setShowCategoryDropdown(false)}
-      >
-        {cat.name}
-      </Link>
-    )
-  })
-)}
-
+                {categories.length === 0 ? (
+                  <p className="px-4 py-2 text-sm text-gray-500">No categories found.</p>
+                ) : (
+                  categories.map((cat) => {
+                    const slug = cat.name.toLowerCase().replace(/\s+/g, '-')
+                    return (
+                      <Link
+                        key={cat.id}
+                        href={`/products?category=${slug}`} // ✅ If using slug in URL
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setShowCategoryDropdown(false)}
+                      >
+                        {cat.name}
+                      </Link>
+                    )
+                  })
+                )}
               </div>
             )}
           </div>
@@ -110,29 +105,29 @@ export default function Navbar() {
                 <ChevronDown className="ml-1 h-4 w-4" />
               </button>
               {showUserDropdown && (
-  <div className="absolute right-0 mt-2 bg-white border rounded-md shadow-lg w-52 z-50">
-    <ul className="py-1 text-sm text-gray-700">
-      <li>
-        <Link
-          href="/profile-page"
-          className="flex items-center px-4 py-3 hover:bg-gray-100 transition"
-        >
-          <User className="w-4 h-4 mr-2" />
-          Profile
-        </Link>
-        </li>
-      <li>
-        <button
-          onClick={logout}
-          className="flex items-center w-full px-4 py-3 text-red-500 hover:bg-gray-100 transition"
-        >
-          <LogOut className="w-4 h-4 mr-2" />
-          Logout
-        </button>
-      </li>
-    </ul>
-  </div>
-)}
+                <div className="absolute right-0 mt-2 bg-white border rounded-md shadow-lg w-52 z-50">
+                  <ul className="py-1 text-sm text-gray-700">
+                    <li>
+                      <Link
+                        href="/profile-page"
+                        className="flex items-center px-4 py-3 hover:bg-gray-100 transition"
+                      >
+                        <User className="w-4 h-4 mr-2" />
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={logout}
+                        className="flex items-center w-full px-4 py-3 text-red-500 hover:bg-gray-100 transition"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
           )}
         </div>

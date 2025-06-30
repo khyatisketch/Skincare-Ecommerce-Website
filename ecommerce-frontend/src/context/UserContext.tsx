@@ -32,7 +32,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           Authorization: `Bearer ${token}`,
         },
       })
-      setUser(res.data)
+      setUser(res.data.result)
     } catch (err) {
       setUser(null)
       console.log("Error", err);

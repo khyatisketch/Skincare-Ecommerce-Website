@@ -29,6 +29,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(res.data)
     } catch (err) {
       setUser(null)
+      console.log("Error", err);
     }
   }
 

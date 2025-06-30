@@ -25,7 +25,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   const fetchUser = async () => {
     try {
-      const res = await axios.get('/api/user/me')
+      const token = localStorage.getItem('token')
+      if (!token) return
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       setUser(res.data)
     } catch (err) {
       setUser(null)

@@ -397,7 +397,7 @@ export default function AdminProducts() {
             />
             <h3 className="text-lg font-semibold text-pink-800">{p.name}</h3>
             <p className="text-sm text-gray-600 mb-1">
-  {p.category?.name || 'Uncategorized'} • ${p.price.toFixed(2)}
+  {p.category?.name || 'Uncategorized'} • Rs.{p.price.toFixed(2)}
 </p>
 
 <p className="text-sm">

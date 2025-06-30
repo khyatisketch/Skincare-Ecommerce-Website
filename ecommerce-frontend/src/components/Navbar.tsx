@@ -87,18 +87,29 @@ export default function Navbar() {
                 <ChevronDown className="ml-1 h-4 w-4" />
               </button>
               {showUserDropdown && (
-                <div className="absolute right-0 mt-2 bg-white border rounded shadow w-40 z-50">
-                  <Link href="/profile" className="block px-4 py-2 text-sm hover:bg-gray-100">
-                    My Account
-                  </Link>
-                  <button
-                    onClick={logout}
-                    className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
-                  >
-                    <LogOut className="inline-block mr-2 h-4 w-4" /> Logout
-                  </button>
-                </div>
-              )}
+  <div className="absolute right-0 mt-2 bg-white border rounded-md shadow-lg w-52 z-50">
+    <ul className="py-1 text-sm text-gray-700">
+      <li>
+        <Link
+          href="/profile"
+          className="flex items-center px-4 py-3 hover:bg-gray-100 transition"
+        >
+          <User className="w-4 h-4 mr-2" />
+          Profile
+        </Link>
+        </li>
+      <li>
+        <button
+          onClick={logout}
+          className="flex items-center w-full px-4 py-3 text-red-500 hover:bg-gray-100 transition"
+        >
+          <LogOut className="w-4 h-4 mr-2" />
+          Logout
+        </button>
+      </li>
+    </ul>
+  </div>
+)}
             </div>
           )}
         </div>

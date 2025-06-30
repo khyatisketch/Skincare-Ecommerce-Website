@@ -1,21 +1,36 @@
 'use client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ShoppingCart, User, LogOut, ChevronDown } from 'lucide-react'
 import { useUser } from '@/context/UserContext'
+import axios from 'axios'
 
 export default function Navbar() {
   const router = useRouter()
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
+  type Category = {
+    id: number
+    name: string
+  }
+  
+  const [categories, setCategories] = useState<Category[]>([])
+  
   const { user, setUser } = useUser()
 
-  const categories = [
-    { name: 'Cleansers', slug: 'cleansers' },
-    { name: 'Serums', slug: 'serums' },
-    { name: 'Moisturizers', slug: 'moisturizers' }
-  ]
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/categories/getAllCategories`)
+        setCategories(res.data.result.data)
+      } catch (err) {
+        console.error('Failed to fetch categories:', err)
+      }
+    }
+
+    fetchCategories()
+  }, [])
 
   const logout = async () => {
     localStorage.removeItem('token')
@@ -47,16 +62,24 @@ export default function Navbar() {
             </button>
             {showCategoryDropdown && (
               <div className="absolute bg-white border rounded shadow-md mt-2 w-40 z-50">
-                {categories.map((cat) => (
-                  <Link
-                    key={cat.slug}
-                    href={`/products?category=${cat.slug}`}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setShowCategoryDropdown(false)}
-                  >
-                    {cat.name}
-                  </Link>
-                ))}
+        {categories.length === 0 ? (
+  <p className="px-4 py-2 text-sm text-gray-500">No categories found.</p>
+) : (
+  categories.map((cat) => {
+    const slug = cat.name.toLowerCase().replace(/\s+/g, '-')
+    return (
+      <Link
+        key={cat.id}
+        href={`/products?category=${slug}`}
+        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        onClick={() => setShowCategoryDropdown(false)}
+      >
+        {cat.name}
+      </Link>
+    )
+  })
+)}
+
               </div>
             )}
           </div>

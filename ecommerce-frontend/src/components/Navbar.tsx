@@ -91,7 +91,7 @@ export default function Navbar() {
     <ul className="py-1 text-sm text-gray-700">
       <li>
         <Link
-          href="/profile"
+          href="/profile-page"
           className="flex items-center px-4 py-3 hover:bg-gray-100 transition"
         >
           <User className="w-4 h-4 mr-2" />

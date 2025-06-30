@@ -13,7 +13,7 @@ export default function ProfilePage() {
       <div className="bg-white shadow-md rounded-lg p-6">
         <div className="flex items-center gap-4">
           <Image
-            src={user.imageUrl || '/default-avatar.png'}
+            src={user.profileImageUrl || '/default-avatar.png'}
             alt="Profile picture"
             width={100}
             height={100}
@@ -27,30 +27,13 @@ export default function ProfilePage() {
             <p className="text-sm text-gray-600">
               Mobile: <span className="font-medium">{user.phone || 'N/A'}</span>
             </p>
-            <p className="text-sm text-gray-600">
+            {/* <p className="text-sm text-gray-600">
               Date of Birth: <span className="font-medium">{user.dob || 'N/A'}</span>
-            </p>
+            </p> */}
             <p className="text-sm text-green-500 font-medium">Verified</p>
           </div>
         </div>
 
-        <div className="mt-6 border-t pt-4">
-          <Image
-            src="/nykaa-prive.png"
-            alt="Nykaa Prive"
-            width={100}
-            height={30}
-            className="mb-2"
-          />
-          <p className="text-sm text-gray-700">
-            As a <span className="font-semibold">SkinGlow Privé</span> Member,
-            you can enjoy special privileges.
-            <Link href="/privileges" className="text-pink-600 ml-1 underline">
-              Click here
-            </Link>{' '}
-            to learn more.
-          </p>
-        </div>
       </div>
     </div>
   )

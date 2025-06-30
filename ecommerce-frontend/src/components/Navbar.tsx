@@ -1,19 +1,27 @@
 'use client'
 import Link from 'next/link'
-// import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { ShoppingCart, User, ChevronDown } from 'lucide-react'
+import { ShoppingCart, User, LogOut, ChevronDown } from 'lucide-react'
+import { useUser } from '@/context/UserContext'
 
 export default function Navbar() {
-//   const router = useRouter()
-  const [showDropdown, setShowDropdown] = useState(false)
+  const router = useRouter()
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  const [showUserDropdown, setShowUserDropdown] = useState(false)
+  const { user, setUser } = useUser()
 
   const categories = [
     { name: 'Cleansers', slug: 'cleansers' },
     { name: 'Serums', slug: 'serums' },
-    { name: 'Moisturizers', slug: 'moisturizers' },
-    { name: 'SPF', slug: 'spf' },
+    { name: 'Moisturizers', slug: 'moisturizers' }
   ]
+
+  const logout = async () => {
+    localStorage.removeItem('token')
+    setUser(null)
+    router.push('/login')
+  }
 
   return (
     <nav className="bg-white shadow sticky top-0 z-50">
@@ -25,24 +33,26 @@ export default function Navbar() {
 
         {/* Links */}
         <div className="flex items-center gap-6">
-          <Link href="/orders" className="text-gray-700 hover:text-black text-sm">Orders</Link>
+          <Link href="/orders" className="text-gray-700 hover:text-black text-sm">
+            Orders
+          </Link>
 
           {/* Category Dropdown */}
           <div className="relative">
             <button
-              onClick={() => setShowDropdown(!showDropdown)}
+              onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
               className="flex items-center text-sm text-gray-700 hover:text-black"
             >
               Categories <ChevronDown className="ml-1 h-4 w-4" />
             </button>
-            {showDropdown && (
+            {showCategoryDropdown && (
               <div className="absolute bg-white border rounded shadow-md mt-2 w-40 z-50">
                 {categories.map((cat) => (
                   <Link
                     key={cat.slug}
                     href={`/products?category=${cat.slug}`}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setShowDropdown(false)}
+                    onClick={() => setShowCategoryDropdown(false)}
                   >
                     {cat.name}
                   </Link>
@@ -54,13 +64,43 @@ export default function Navbar() {
           {/* Cart Icon */}
           <Link href="/cart" className="relative">
             <ShoppingCart className="h-5 w-5 text-gray-700 hover:text-black" />
-            {/* Optionally add badge with item count */}
           </Link>
 
           {/* User/Login Icon */}
-          <Link href="/login">
-            <User className="h-5 w-5 text-gray-700 hover:text-black" />
-          </Link>
+          {!user ? (
+            <Link href="/login">
+              <User className="h-5 w-5 text-gray-700 hover:text-black" />
+            </Link>
+          ) : (
+            <div className="relative">
+              <button
+                onClick={() => setShowUserDropdown(!showUserDropdown)}
+                className="flex items-center text-sm text-gray-700 hover:text-black"
+              >
+                {user.name ? (
+                  <span className="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center font-bold">
+                    {user.name.charAt(0).toUpperCase()}
+                  </span>
+                ) : (
+                  <User className="h-5 w-5" />
+                )}
+                <ChevronDown className="ml-1 h-4 w-4" />
+              </button>
+              {showUserDropdown && (
+                <div className="absolute right-0 mt-2 bg-white border rounded shadow w-40 z-50">
+                  <Link href="/profile" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                    My Account
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+                  >
+                    <LogOut className="inline-block mr-2 h-4 w-4" /> Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </nav>

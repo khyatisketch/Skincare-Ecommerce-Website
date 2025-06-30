@@ -39,13 +39,6 @@ const verifyOtp = async (req, res) => {
 
 const updateProfile = async (req, res) => {
     try {
-      console.log("Incoming body:", req.body);
-console.log("Incoming file:", req.file);
-
-      // Trim inputs to avoid accidental spaces
-      // const name = req.body.name?.trim();
-      // const email = req.body.email?.trim();
-  
       const name = (req.body.name || '').trim();
       const email = (req.body.email || '').trim();
       
@@ -71,11 +64,24 @@ console.log("Incoming file:", req.file);
       return _handleResponse(req, res, error);
     }
   };
+
+  const getUser = async (req, res) => {
+    try {
+      const userId = req.user.userId
+      const user = await authProvider.getUserProvider(userId)
+  
+      return _handleResponse(req, res, null, user)
+    } catch (error) {
+      console.error('Error in getUser controller:', error)
+      return _handleResponse(req, res, error)
+    }
+  }
   
   
 
 module.exports = {
     requestOtp,
     verifyOtp,
-    updateProfile
+    updateProfile,
+    getUser
 }

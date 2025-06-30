@@ -82,9 +82,29 @@ const updateProfileProvider = async (userId, { name, email, profileImageUrl }) =
       throw error;
     }
   };
+
+  const getUserProvider = async (userId) => {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        profileImageUrl: true,
+        role: true
+      }
+    })
+  
+    if (!user) throw { message: 'User not found' }
+  
+    return user
+  }
+  
   
 module.exports = {
     requestOtpProvider,
     verifyOtpProvider,
-    updateProfileProvider
+    updateProfileProvider,
+    getUserProvider
 }

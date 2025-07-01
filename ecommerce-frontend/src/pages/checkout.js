@@ -1,3 +1,4 @@
+'use client'
 import { useCart } from '../context/CartContext';
 import { useState, useMemo, useEffect } from 'react';
 import axios from 'axios';

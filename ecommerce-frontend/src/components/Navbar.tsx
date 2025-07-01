@@ -5,15 +5,12 @@ import { useState, useEffect } from 'react'
 import { ShoppingCart, User, LogOut, ChevronDown } from 'lucide-react'
 import { useUser } from '@/context/UserContext'
 import axios from 'axios'
-import { useCart } from '@/context/CartContext'
-import CartDrawer from './CartDrawer' // ✅ Import the drawer directly
 
 export default function Navbar() {
   const router = useRouter()
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [categories, setCategories] = useState<{ id: number; name: string }[]>([])
-  const { setIsCartOpen } = useCart()
   const { user, setUser } = useUser()
 
   useEffect(() => {
@@ -79,9 +76,9 @@ export default function Navbar() {
             </div>
 
             {/* 🛒 Cart Button */}
-            <button onClick={() => setIsCartOpen(true)} className="relative">
-              <ShoppingCart className="h-5 w-5 text-gray-700 hover:text-black" />
-            </button>
+            <Link href="/cart" className="relative">
+            <ShoppingCart className="h-5 w-5 text-gray-700 hover:text-black" />
+          </Link>
 
             {/* 👤 User Profile / Login */}
             {!user ? (
@@ -133,8 +130,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* 🛒 CartDrawer Mounted Right Here */}
-      <CartDrawer />
     </>
   )
 }

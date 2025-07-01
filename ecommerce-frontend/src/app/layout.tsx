@@ -3,10 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from '../components/Navbar'
 import { UserProvider } from "@/context/UserContext";
-import { AuthProvider } from '../context/AuthContext'
-import { CartProvider } from '../context/CartContext'
-import CartDrawer from '../components/CartDrawer'
-import { Toaster } from 'react-hot-toast'
+import { CartProvider } from "@/context/CartContext";
+import CartDrawer from '../pages/cart'
 
 
 const geistSans = Geist({
@@ -35,15 +33,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <UserProvider>
-          <AuthProvider>
-            <CartProvider>
-            <Toaster position="top-center" />
-            <Navbar />
-            {children}
-            <CartDrawer/>
-            </CartProvider>
-          </AuthProvider>
-         
+          <CartProvider>
+         <Navbar />
+         <CartDrawer/>
+        {children}
+        </CartProvider>
         </UserProvider>
       </body>
     </html>

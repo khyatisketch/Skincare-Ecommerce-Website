@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { ShoppingCart, User, LogOut, ChevronDown } from 'lucide-react'
 import { useUser } from '@/context/UserContext'
 import axios from 'axios'
-import { useCart } from '../context/CartContext'
+import { useCart } from '@/context/CartContext'
 
 
 export default function Navbar() {
@@ -83,12 +83,9 @@ export default function Navbar() {
           </div>
 
           {/* Cart Icon */}
-          <button
-            onClick={() => setIsCartOpen(true)}
-            className="relative"
-          >
+          <Link href="/cart" className="relative">
             <ShoppingCart className="h-5 w-5 text-gray-700 hover:text-black" />
-          </button>
+          </Link>
 
           {/* User/Login Icon */}
           {!user ? (

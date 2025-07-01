@@ -1,4 +1,5 @@
 // components/CartDrawer.js
+'use client'
 import { useEffect, useState } from 'react'
 import { useCart } from '../context/CartContext'
 import styles from '../pages/Cart.module.css'

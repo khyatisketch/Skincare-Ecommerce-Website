@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { ShoppingCart, User, LogOut, ChevronDown } from 'lucide-react'
+import {  User, LogOut, ChevronDown } from 'lucide-react'
 import { useUser } from '@/context/UserContext'
 import axios from 'axios'
 

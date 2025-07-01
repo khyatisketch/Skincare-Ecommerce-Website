@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import { useCart } from '../context/CartContext'
+import { useSearchParams } from 'next/navigation'
 
 
 export default function Products() {
@@ -25,13 +26,24 @@ export default function Products() {
 
 
   const limit = 10;
+  const searchParams = useSearchParams();
 
   // Fetch categories once on mount
   useEffect(() => {
     axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/categories/getAllCategories`)
       .then(res => {
-        console.log('Categories response:', res.data);
-        setCategories(res.data.result.data);
+        const fetchedCategories = res.data.result.data;
+        setCategories(fetchedCategories);
+  
+        const categorySlug = searchParams.get('category');
+        if (categorySlug) {
+          const matchedCategory = fetchedCategories.find(cat =>
+            cat.name.toLowerCase().replace(/\s+/g, '-') === categorySlug
+          );
+          if (matchedCategory) {
+            setCategoryId(matchedCategory.id.toString());
+          }
+        }
       })
       .catch(err => {
         console.error('Error fetching categories:', err);
@@ -78,6 +90,7 @@ export default function Products() {
           console.error('Error fetching rating:', err);
         }
       }
+
   
       setRatings(allRatings);
     }

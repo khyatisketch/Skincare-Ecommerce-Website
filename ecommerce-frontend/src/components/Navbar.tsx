@@ -13,7 +13,7 @@ export default function Navbar() {
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [categories, setCategories] = useState<{ id: number; name: string }[]>([])
-  const { setIsCartOpen, isCartOpen } = useCart()
+  const { setIsCartOpen } = useCart()
   const { user, setUser } = useUser()
 
   useEffect(() => {

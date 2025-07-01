@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { ShoppingCart, User, LogOut, ChevronDown } from 'lucide-react'
 import { useUser } from '@/context/UserContext'
 import axios from 'axios'
-import { useCart } from '@/context/CartContext'
+import { useCart } from '../context/CartContext'
 
 
 export default function Navbar() {

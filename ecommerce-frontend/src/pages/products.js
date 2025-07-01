@@ -28,27 +28,30 @@ export default function Products() {
   const limit = 10;
   const searchParams = useSearchParams();
 
-  // Fetch categories once on mount
+  // ✅ 1. Fetch categories once on mount
   useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/categories/getAllCategories`)
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/categories/getAllCategories`)
       .then(res => {
-        const fetchedCategories = res.data.result.data;
-        setCategories(fetchedCategories);
-  
-        const categorySlug = searchParams.get('category');
-        if (categorySlug) {
-          const matchedCategory = fetchedCategories.find(cat =>
-            cat.name.toLowerCase().replace(/\s+/g, '-') === categorySlug
-          );
-          if (matchedCategory) {
-            setCategoryId(matchedCategory.id.toString());
-          }
-        }
+        setCategories(res.data.result.data);
       })
       .catch(err => {
         console.error('Error fetching categories:', err);
       });
   }, []);
+
+  // ✅ 2. After categories load, match slug in URL to categoryId
+  useEffect(() => {
+    const categorySlug = searchParams.get('category');
+    if (categorySlug && categories.length > 0) {
+      const matchedCategory = categories.find(cat =>
+        cat.name.toLowerCase().replace(/\s+/g, '-') === categorySlug
+      );
+      if (matchedCategory) {
+        setCategoryId(matchedCategory.id.toString());
+      }
+    }
+  }, [categories, searchParams]);
 
 
   // Fetch products whenever filters or page changes

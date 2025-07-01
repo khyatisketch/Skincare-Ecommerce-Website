@@ -83,9 +83,12 @@ export default function Navbar() {
           </div>
 
           {/* Cart Icon */}
-          <Link href="/cart" className="relative">
-            <ShoppingCart className="h-5 w-5 text-gray-700 hover:text-black" />
-          </Link>
+          <button
+  onClick={() => setIsCartOpen(true)}
+  className="relative"
+>
+  <ShoppingCart className="h-5 w-5 text-gray-700 hover:text-black" />
+</button>
 
           {/* User/Login Icon */}
           {!user ? (

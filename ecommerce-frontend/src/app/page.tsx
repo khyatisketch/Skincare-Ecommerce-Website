@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import FeaturedProducts from '../components/FeaturedProducts'
 import WhyChooseUs from '@/components/WhyChooseUs'
+import InstagramGallery from '../components/InstagramGallery'
 
 export default function HomeHero() {
   return (
@@ -54,6 +55,7 @@ export default function HomeHero() {
     </section>
         <FeaturedProducts />
       <WhyChooseUs/>
+      <InstagramGallery/>
         </>
   )
 }

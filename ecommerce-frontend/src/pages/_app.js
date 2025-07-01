@@ -1,7 +1,8 @@
 import '../app/globals.css'
 import { AuthProvider } from '../context/AuthContext'
 import { CartProvider } from '../context/CartContext'
-import CartDrawer from './cart'
+// import CartDrawer from './cart'
+import CartDrawer from '../components/CartDrawer' // ✅ Corrected
 import { Toaster } from 'react-hot-toast'
 
 export default function App({ Component, pageProps }) {

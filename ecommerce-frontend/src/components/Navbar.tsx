@@ -75,10 +75,10 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* 🛒 Cart Button */}
+            {/* 🛒 Cart Button
             <Link href="/cart" className="relative">
             <ShoppingCart className="h-5 w-5 text-gray-700 hover:text-black" />
-          </Link>
+          </Link> */}
 
             {/* 👤 User Profile / Login */}
             {!user ? (

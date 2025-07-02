@@ -6,6 +6,7 @@ import FeaturedProducts from '../components/FeaturedProducts'
 import WhyChooseUs from '@/components/WhyChooseUs'
 import InstagramGallery from '../components/InstagramGallery'
 import CTAFooter from '@/components/CTAFooter'
+import NewsletterSignup from '@/components/NewsletterSignup'
 
 export default function HomeHero() {
   return (
@@ -57,6 +58,7 @@ export default function HomeHero() {
         <FeaturedProducts />
       <WhyChooseUs/>
       <InstagramGallery/>
+      <NewsletterSignup/>
       <CTAFooter/>
         </>
   )

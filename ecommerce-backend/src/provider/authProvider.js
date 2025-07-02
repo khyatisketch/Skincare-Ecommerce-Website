@@ -100,7 +100,33 @@ const updateProfileProvider = async (userId, { name, email, profileImageUrl }) =
   
     return user
   }
-  
+
+  const subscribeProvider = async ({ email }) => {
+    try {
+        // Check if already subscribed
+        const existing = await prisma.newsletter.findUnique({
+            where: { email },
+        });
+
+        if (existing) {
+            return {
+                message: 'Email already subscribed',
+            };
+        }
+
+        await prisma.newsletter.create({
+            data: { email },
+        });
+
+        return {
+            message: 'Successfully subscribed to newsletter',
+        };
+
+    } catch (error) {
+        console.error("Error in Newsletter Provider ::", error);
+        throw error;
+    }
+};
   
 module.exports = {
     requestOtpProvider,

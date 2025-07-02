@@ -58,10 +58,26 @@ const updateProfileValidator = async (data) => {
     };
   };
   
-  
+  const subscribeValidator = async (dataObj) => {
+    const { email } = dataObj;
+
+    const rules = {
+        email: 'required|email',
+    };
+
+    const v = new Validator(dataObj, rules);
+    const matched = await v.check();
+
+    if (!matched) {
+        throw v.errors;
+    }
+
+    return { email };
+};
 
 module.exports = {
     otpValidatorObj,
     verifyOtpValidatorObj,
-    updateProfileValidator
+    updateProfileValidator,
+    subscribeValidator
 }

@@ -76,6 +76,23 @@ const updateProfile = async (req, res) => {
       return _handleResponse(req, res, error)
     }
   }
+
+  const subscribeNewsletter = async (req, res) => {
+    try {
+        if (!req.body) {
+            return _handleResponse(req, res, messages.error.REQ_BODY_EMPTY);
+        }
+
+        const validatedData = await authValidator.subscribeValidator(req.body);
+        const result = await authProvider.subscribeProvider(validatedData);
+
+        return _handleResponse(req, res, null, result, result.message);
+
+    } catch (err) {
+        console.error("Error in Newsletter Controller :: ", err);
+        return _handleResponse(req, res, err);
+    }
+};
   
   
 
@@ -83,5 +100,6 @@ module.exports = {
     requestOtp,
     verifyOtp,
     updateProfile,
-    getUser
+    getUser,
+    subscribeNewsletter
 }

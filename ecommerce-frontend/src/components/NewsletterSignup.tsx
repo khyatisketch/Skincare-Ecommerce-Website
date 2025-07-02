@@ -4,12 +4,30 @@ import { useState } from 'react'
 export default function NewsletterSignup() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // For now, just fake the submission
-    setSubmitted(true)
-    setEmail('')
+    setError('')
+    try {
+      const res = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.message || 'Something went wrong.')
+      }
+
+      setSubmitted(true)
+      setEmail('')
+    } catch (err: any) {
+      setError(err.message)
+    }
   }
 
   return (
@@ -38,6 +56,7 @@ export default function NewsletterSignup() {
             </button>
           </form>
         )}
+        {error && <p className="text-red-600 mt-4 text-sm">{error}</p>}
       </div>
     </section>
   )

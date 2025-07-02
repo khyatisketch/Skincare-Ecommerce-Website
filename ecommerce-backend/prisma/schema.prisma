@@ -116,6 +116,12 @@ model Coupon {
   createdAt     DateTime @default(now())
 }
 
+model Newsletter {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
 enum Role {
   USER
   ADMIN

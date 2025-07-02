@@ -150,7 +150,7 @@ export default function Orders() {
                   padding: '16px 0'
                 }}>
                   <img
-                    src={item.product?.imageUrl || '/placeholder.png'}
+                    src={item.product?.imageUrl[0] || '/placeholder.png'}
                     alt={item.product?.name}
                     style={{
                       width: 60,

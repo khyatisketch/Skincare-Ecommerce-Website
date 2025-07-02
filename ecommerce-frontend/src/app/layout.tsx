@@ -15,10 +15,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// app/layout.tsx
 export const metadata: Metadata = {
-  title: "SkinGlow",
-  description: "Clean, gentle skincare for radiant skin",
-};
+  title: 'SkinGlow – Clean Skincare That Works',
+  description:
+    'Shop dermatologist-tested skincare made with clean ingredients. Free shipping, results guaranteed.',
+  openGraph: {
+    title: 'SkinGlow – Clean Skincare That Works',
+    description: 'Your skin deserves clean, effective care. Discover SkinGlow today.',
+    url: 'https://skincare-ecommerce-website.vercel.app/',
+    siteName: 'SkinGlow',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'SkinGlow – Glow up your skincare',
+      },
+    ],
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SkinGlow – Clean Skincare That Works',
+    description: 'Skincare that’s gentle, effective, and beautiful.',
+    images: ['/og-image.jpg'],
+    creator: '@skinglowcare',
+  },
+}
+
 
 export default function RootLayout({
   children,
@@ -27,6 +53,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+        <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

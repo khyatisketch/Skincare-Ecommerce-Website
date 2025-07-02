@@ -10,7 +10,7 @@ const createOrderValidator = async (dataObj) => {
     'items.*.quantity': 'required|integer|min:1',
     shippingAddress: 'required|string',
     total: 'required|numeric|min:0',
-    couponId: 'string|nullable'
+    couponId: 'string'
   };
 
   const validation = new Validator(dataObj, rules);
@@ -29,8 +29,6 @@ const createOrderValidator = async (dataObj) => {
 
   return { userId, items, shippingAddress, couponId, total };
 }
-
-
 
 const getMyOrdersValidator = async (userId) => {
   const data = { userId };

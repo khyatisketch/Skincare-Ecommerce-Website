@@ -2,7 +2,7 @@
 const { sendOrderConfirmation } = require("../utils/email");
 const prisma = require('../prisma');
 
-const createOrderProvider = async ({ userId, items, shippingAddress, couponCode, total }) => {
+const createOrderProvider = async ({ userId, items, shippingAddress, couponId, total }) => {
   const productIds = items.map(i => parseInt(i.productId, 10));
 
   const products = await prisma.product.findMany({
@@ -26,6 +26,7 @@ const createOrderProvider = async ({ userId, items, shippingAddress, couponCode,
   // Start transaction
   const order = await prisma.$transaction(async (tx) => {
     let discount = 0;
+    let coupon = null
 
     // if (couponCode) {
     //   const coupon = await tx.coupon.findUnique({
@@ -33,7 +34,7 @@ const createOrderProvider = async ({ userId, items, shippingAddress, couponCode,
     //   });
 
     if (couponId) {
-      const coupon = await tx.coupon.findUnique({ where: { id: couponId } });
+      coupon = await tx.coupon.findUnique({ where: { id: couponId } });
 
       if (!coupon) {
         throw new Error('Invalid coupon code');
@@ -104,8 +105,6 @@ const createOrderProvider = async ({ userId, items, shippingAddress, couponCode,
 
   return order;
 };
-
-
 
 const getMyOrdersProvider = async ({ userId }) => {
     try {

@@ -17,18 +17,23 @@ export default function NewsletterSignup() {
         },
         body: JSON.stringify({ email }),
       })
-
+  
       if (!res.ok) {
         const data = await res.json()
         throw new Error(data.message || 'Something went wrong.')
       }
-
+  
       setSubmitted(true)
       setEmail('')
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError('Something went wrong.')
+      }
     }
   }
+  
 
   return (
     <section className="py-20 bg-pink-50 px-6 md:px-12">

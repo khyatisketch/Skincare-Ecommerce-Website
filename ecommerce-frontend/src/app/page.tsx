@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import FeaturedProducts from '../components/FeaturedProducts'
 import WhyChooseUs from '@/components/WhyChooseUs'
 import InstagramGallery from '../components/InstagramGallery'
+import CTAFooter from '@/components/CTAFooter'
 
 export default function HomeHero() {
   return (
@@ -56,6 +57,7 @@ export default function HomeHero() {
         <FeaturedProducts />
       <WhyChooseUs/>
       <InstagramGallery/>
+      <CTAFooter/>
         </>
   )
 }

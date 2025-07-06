@@ -3,7 +3,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useCart } from '../context/CartContext'
 import { useSearchParams } from 'next/navigation'
-import WishlistButton from '@/components/WishlistButton'
+import WishlistButton from '../components/WishListButton'
 
 
 export default function Products() {

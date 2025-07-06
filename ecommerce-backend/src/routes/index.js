@@ -15,6 +15,7 @@ class Routes {
         this.app.use('/payments', trimRequest.all, require("./payments"));
         this.app.use('/webhook', trimRequest.all, require("./webhook"));
         this.app.use('/coupons', trimRequest.all, require("./coupons"));
+        this.app.use('/wishlist', trimRequest.all, require("./wishlist"));
 
 
         this.app.use((req, res) => _handleResponse(req, res, { statusCode: error.InvalidApiRoute.statusCode,code: error.InvalidApiRoute.code, message: error.InvalidApiRoute.message }, null))

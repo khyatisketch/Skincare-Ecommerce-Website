@@ -1,4 +1,4 @@
-{
+  {
   "compilerOptions": {
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/context/UserContext.tsx", "src/pages/page.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/context/UserContext.tsx", "src/pages/page.js", "src/components/WishListButton.js"],
   "exclude": ["node_modules"]
 }

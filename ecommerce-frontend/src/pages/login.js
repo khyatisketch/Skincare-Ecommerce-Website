@@ -19,61 +19,46 @@ export default function Login() {
   console.log('Backend URL:', process.env.NEXT_PUBLIC_BACKEND_API_URL);
   const requestOtp = async () => {
     try {
-      setLoading(true)
-      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/request-otp`, { phone })
-      setMessage('OTP sent to your number')
-      setStep(2)
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/request-otp`, { phone })
+      setSessionId(res.data.result.sessionId)  // Save sessionId in state
+      setMessage('OTP sent!')
     } catch (err) {
-      const msg = err?.response?.data?.message;
-    
-      // If message is a string, show it directly
-      if (typeof msg === 'string') {
-        setMessage(msg);
-      }
-      // If message is an object with nested error details
-      else if (typeof msg === 'object' && msg !== null) {
-        const extractedMessages = Object.values(msg)
-          .map((entry) => {
-            if (typeof entry === 'object' && entry?.message) return entry.message;
-            if (typeof entry === 'string') return entry;
-            return '';
-          })
-          .filter(Boolean)
-          .join(', ');
-    
-        setMessage(extractedMessages || 'Validation error occurred.');
-      } else {
-        setMessage('Error sending OTP');
-      }
+      setMessage(err?.response?.data?.message || 'Failed to send OTP')
     }
      finally {
       setLoading(false)
     }
   }
 
-  const verifyOtp = async () => {
-    try {
-      setLoading(true)
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/verify-otp`, { phone, code: otp })
-      const { token, profileIncomplete } = res.data.result
-  
-      localStorage.setItem('token', token)
-      login(res.data.result)
-  
-      setMessage('Logged in successfully!')
-  
-      if (profileIncomplete) {
-        router.push('/profile-setup') // ✅ redirect to profile setup page
-      } else {
-        const redirectTo = router.query.redirect || '/'
-        router.push(redirectTo)
-      }
-    } catch (err) {
-      setMessage(err?.response?.data?.message || 'OTP verification failed')
-    } finally {
-      setLoading(false)
+  // During OTP verification:
+const verifyOtp = async () => {
+  try {
+    setLoading(true)
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/verify-otp`, {
+      phone,
+      code: otp,
+      sessionId  // Pass sessionId to backend
+    })
+    const { token, profileIncomplete } = res.data.result
+
+    localStorage.setItem('token', token)
+    login(res.data.result)
+
+    setMessage('Logged in successfully!')
+
+    if (profileIncomplete) {
+      router.push('/profile-setup')
+    } else {
+      const redirectTo = router.query.redirect || '/'
+      router.push(redirectTo)
     }
+  } catch (err) {
+    setMessage(err?.response?.data?.message || 'OTP verification failed')
+  } finally {
+    setLoading(false)
   }
+}
+
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-purple-100 flex items-center justify-center px-4">

@@ -1,39 +1,39 @@
 const prisma = require('../prisma');
 const jwt = require('jsonwebtoken');
 const { generateOtp } = require('../utils/commonHelper')
+const axios = require('axios');
 
 const requestOtpProvider = async ({ phone }) => {
     try {
-        const otpCode = generateOtp();
-        const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 mins
+        const response = await axios.get(
+            `https://2factor.in/API/V1/${process.env.TWO_FACTOR_API_KEY}/SMS/+91${phone}/AUTOGEN`
+        );
 
-        await prisma.otp.create({
-            data: {
-                phone,
-                code: otpCode,
-                expiresAt,
-            },
-        });
+        const data = response.data;
 
-        console.log(`OTP for ${phone}: ${otpCode}`); // Replace this with SMS service integration
+        if (data.Status !== 'Success') {
+            throw new Error('Failed to send OTP via 2Factor');
+        }
 
         return {
-            message: 'OTP sent successfully via SMS',
+            message: 'OTP sent successfully via 2Factor SMS',
+            sessionId: data.Details,  // This is the session ID used for verifying OTP
         };
     } catch (error) {
-        console.error("Error in OTP Provider ::", error);
-        throw error;
+        console.error("Error in 2Factor OTP Provider ::", error);
+        throw { message: 'Failed to send OTP' };
     }
 };
 
-const verifyOtpProvider = async ({ phone, code }) => {
+const verifyOtpProvider = async ({ phone, code, sessionId }) => {
     try {
-        const otp = await prisma.otp.findFirst({
-            where: { phone, code },
-            orderBy: { createdAt: 'desc' },
-        });
+        const response = await axios.get(
+            `https://2factor.in/API/V1/${process.env.TWO_FACTOR_API_KEY}/SMS/VERIFY/${sessionId}/${code}`
+        );
 
-        if (!otp || otp.expiresAt < new Date()) {
+        const data = response.data;
+
+        if (data.Status !== 'Success') {
             throw { message: 'Invalid or expired OTP' };
         }
 
@@ -57,10 +57,11 @@ const verifyOtpProvider = async ({ phone, code }) => {
             profileIncomplete,
         };
     } catch (err) {
-        console.error("Error in verifyOtpProvider:", err);
+        console.error("Error in verifyOtpProvider (2Factor):", err);
         throw err;
     }
 };
+
 
 const updateProfileProvider = async (userId, { name, email, profileImageUrl }) => {
     try {

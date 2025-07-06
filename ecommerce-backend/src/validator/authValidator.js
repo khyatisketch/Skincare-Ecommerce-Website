@@ -20,11 +20,12 @@ const otpValidatorObj = async (dataObj) => {
 };
 
 const verifyOtpValidatorObj = async function (dataObj) {
-    const { phone, code } = dataObj;
+    const { phone, code, sessionId } = dataObj;
 
     const rules = {
         phone: 'required|string|lengthBetween:10,15',
         code: 'required|string|lengthBetween:4,6',
+        sessionId: 'required|string'
     };
 
     const v = new Validator(dataObj, rules);
@@ -34,8 +35,9 @@ const verifyOtpValidatorObj = async function (dataObj) {
         throw v.errors;
     }
 
-    return { phone, code };
+    return { phone, code, sessionId };
 };
+
 
 const updateProfileValidator = async (data) => {
     const rules = {

@@ -3,6 +3,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useCart } from '../context/CartContext'
 import { useSearchParams } from 'next/navigation'
+import WishlistButton from '@/components/WishlistButton'
 
 
 export default function Products() {
@@ -312,27 +313,43 @@ export default function Products() {
                     e.currentTarget.querySelector('.overlay').style.opacity = 0
                   }}
                 >
-                  <div style={{ position: 'relative', height: 280, backgroundColor: '#fff0f5' }}>
-                    <img
-                      src={Array.isArray(p.imageUrl) ? p.imageUrl[0] : '/placeholder.png'}
-                      alt={p.name}
-                      style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
-                    />
-                    <div
-                      className="overlay"
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        backgroundColor: '#f6a5c0',
-                        opacity: 0,
-                        transition: 'opacity 0.3s ease',
-                        borderRadius: 20,
-                      }}
-                    />
-                  </div>
+                 <div style={{ position: 'relative', height: 280, backgroundColor: '#fff0f5' }}>
+  <img
+    src={Array.isArray(p.imageUrl) ? p.imageUrl[0] : '/placeholder.png'}
+    alt={p.name}
+    style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+  />
+  <div
+    className="overlay"
+    style={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: '#f6a5c0',
+      opacity: 0,
+      transition: 'opacity 0.3s ease',
+      borderRadius: 20,
+    }}
+  />
+
+  {/* ❤️ Wishlist Button overlay top-right */}
+  <div
+    style={{
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      zIndex: 2,
+      backgroundColor: 'rgba(255,255,255,0.9)',
+      borderRadius: '50%',
+      padding: 6,
+    }}
+  >
+    <WishlistButton productId={p.id} />
+  </div>
+</div>
+
 
                   {/* Content Wrapper */}
                   <div style={{ padding: '20px 25px', display: 'flex', flexDirection: 'column', flex: 1 }}>

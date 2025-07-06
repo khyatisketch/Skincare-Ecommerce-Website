@@ -6,7 +6,7 @@ const axios = require('axios');
 const requestOtpProvider = async ({ phone }) => {
     try {
         const response = await axios.get(
-            `https://2factor.in/API/V1/${process.env.TWO_FACTOR_API_KEY}/SMS/+91${phone}/AUTOGEN`
+            `https://2factor.in/API/V1/${process.env.TWO_FACTOR_API_KEY}/SMS/+91${phone}/LOGIIN`
         );
 
         const data = response.data;

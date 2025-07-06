@@ -16,6 +16,7 @@ class Server {
     // Middleware to skip Ngrok browser warning
     this.app.use((req, res, next) => {
       res.header("ngrok-skip-browser-warning", "1");
+      res.header('Access-Control-Allow-Credentials', 'true');
       next();
     });
 
@@ -39,7 +40,7 @@ class Server {
         }
       },
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
     };
 

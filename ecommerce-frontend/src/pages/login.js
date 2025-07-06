@@ -9,7 +9,7 @@ export default function Login() {
     const router = useRouter()
     const { login } = useAuth()
 
-  const [step, setStep] = useState(1)
+  const [step] = useState(1)
   const [phone, setPhone] = useState('')
   const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)

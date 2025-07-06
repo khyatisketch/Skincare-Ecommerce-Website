@@ -5,23 +5,26 @@ const axios = require('axios');
 
 const requestOtpProvider = async ({ phone }) => {
     try {
-        const response = await axios.get(
-            `https://2factor.in/API/V1/${process.env.TWO_FACTOR_API_KEY}/SMS/+91${phone}/LOGIIN`
-        );
+        const otpCode = generateOtp();
+        const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 mins
 
-        const data = response.data;
+        await prisma.otp.create({
+            data: {
+                phone,
+                code: otpCode,
+                expiresAt,
+            },
+        });
 
-        if (data.Status !== 'Success') {
-            throw new Error('Failed to send OTP via 2Factor');
-        }
+        console.log(`OTP for ${phone}: ${otpCode}`); // Still useful for backend logs
 
         return {
-            message: 'OTP sent successfully via 2Factor SMS',
-            sessionId: data.Details,  // This is the session ID used for verifying OTP
+            message: 'OTP sent successfully via SMS',
+            ...(process.env.NODE_ENV !== 'production' && { code: otpCode }) // Return OTP only in dev
         };
     } catch (error) {
-        console.error("Error in 2Factor OTP Provider ::", error);
-        throw { message: 'Failed to send OTP' };
+        console.error("Error in OTP Provider ::", error);
+        throw error;
     }
 };
 

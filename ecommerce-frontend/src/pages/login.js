@@ -1,69 +1,76 @@
 'use client';
-import { useState } from 'react'
-import axios from 'axios'
-import "../app/globals.css";
-import { useRouter } from 'next/router'
-import { useAuth } from '../context/AuthContext'
+import { useState } from 'react';
+import axios from 'axios';
+import '../app/globals.css';
+import { useRouter } from 'next/router';
+import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
-    const router = useRouter()
-    const { login } = useAuth()
+  const router = useRouter();
+  const { login } = useAuth();
 
-  const [step] = useState(1)
-  const [phone, setPhone] = useState('')
-  const [otp, setOtp] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
-  
+  const [step, setStep] = useState(1);
+  const [phone, setPhone] = useState('');
+  const [otp, setOtp] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
-  console.log('Backend URL:', process.env.NEXT_PUBLIC_BACKEND_API_URL);
   const requestOtp = async () => {
+    setLoading(true);
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/request-otp`, { phone })
-      setSessionId(res.data.result.sessionId)  // Save sessionId in state
-      setMessage('OTP sent!')
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/request-otp`,
+        { phone }
+      );
+
+      const otpCode = res.data.result?.code;
+      setMessage('OTP sent successfully!');
+
+      // In development, show OTP via alert or auto-fill
+      if (otpCode) {
+        alert(`Your OTP is: ${otpCode}`);
+        setOtp(otpCode); // Optional: pre-fill input
+      }
+
+      setStep(2); // Move to OTP input screen
     } catch (err) {
-      setMessage(err?.response?.data?.message || 'Failed to send OTP')
+      setMessage(err?.response?.data?.message || 'Failed to send OTP');
+    } finally {
+      setLoading(false);
     }
-     finally {
-      setLoading(false)
+  };
+
+  const verifyOtp = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/verify-otp`,
+        { phone, code: otp }
+      );
+
+      const { token, profileIncomplete, user } = res.data.result;
+
+      localStorage.setItem('token', token);
+      login({ token, user });
+
+      setMessage('Logged in successfully!');
+
+      if (profileIncomplete) {
+        router.push('/profile-setup');
+      } else {
+        const redirectTo = router.query.redirect || '/';
+        router.push(redirectTo);
+      }
+    } catch (err) {
+      setMessage(err?.response?.data?.message || 'OTP verification failed');
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  // During OTP verification:
-const verifyOtp = async () => {
-  try {
-    setLoading(true)
-    const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/verify-otp`, {
-      phone,
-      code: otp,
-      sessionId  // Pass sessionId to backend
-    })
-    const { token, profileIncomplete } = res.data.result
-
-    localStorage.setItem('token', token)
-    login(res.data.result)
-
-    setMessage('Logged in successfully!')
-
-    if (profileIncomplete) {
-      router.push('/profile-setup')
-    } else {
-      const redirectTo = router.query.redirect || '/'
-      router.push(redirectTo)
-    }
-  } catch (err) {
-    setMessage(err?.response?.data?.message || 'OTP verification failed')
-  } finally {
-    setLoading(false)
-  }
-}
-
-  
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-purple-100 flex items-center justify-center px-4">
       <div className="bg-white/70 backdrop-blur-lg shadow-lg rounded-3xl px-8 py-10 w-full max-w-md relative">
-        
         <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-[#1a1a1a] text-white flex items-center justify-center text-3xl rounded-full shadow-md">
           👤
         </div>
@@ -111,5 +118,5 @@ const verifyOtp = async () => {
         )}
       </div>
     </div>
-  )
+  );
 }

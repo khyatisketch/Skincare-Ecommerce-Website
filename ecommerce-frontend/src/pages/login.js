@@ -23,15 +23,15 @@ export default function Login() {
         { phone }
       );
 
-      const otpCode = res.data.result?.code;
-      console.log(otpCode)
+      // const otpCode = res.data.result?.code;
+      console.log(res)
       setMessage('OTP sent successfully!');
 
       // In development, show OTP via alert or auto-fill
-      if (otpCode) {
+      if (res) {
         // alert(`Your OTP is: ${otpCode}`);
-        console.log('OTP code from response:', otpCode);
-        setOtp(otpCode); // Optional: pre-fill input
+        console.log('OTP code from response:', res);
+        setOtp(res); // Optional: pre-fill input
       }
 
       setStep(2); // Move to OTP input screen

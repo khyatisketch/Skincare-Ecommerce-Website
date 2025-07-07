@@ -50,8 +50,8 @@ class Server {
 
     this.app.use(cors(corsOptions));
 
-    // // Handle preflight (OPTIONS) requests globally
-    this.app.options('*', cors(corsOptions));
+    // // // Handle preflight (OPTIONS) requests globally
+    this.app.options('/', cors(corsOptions));
 
     this.http = http.Server(this.app);
   }

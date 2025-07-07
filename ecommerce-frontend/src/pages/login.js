@@ -24,11 +24,13 @@ export default function Login() {
       );
 
       const otpCode = res.data.result?.code;
+      console.log(otpCode)
       setMessage('OTP sent successfully!');
 
       // In development, show OTP via alert or auto-fill
       if (otpCode) {
-        alert(`Your OTP is: ${otpCode}`);
+        // alert(`Your OTP is: ${otpCode}`);
+        console.log('OTP code from response:', otpCode);
         setOtp(otpCode); // Optional: pre-fill input
       }
 

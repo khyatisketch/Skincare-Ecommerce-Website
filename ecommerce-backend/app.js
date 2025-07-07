@@ -28,14 +28,17 @@ class Server {
     const allowedOrigins = [
       'http://localhost:3000',
       'https://skincare-ecommerce-website.vercel.app',
+      'https://skincare-ecommerce-website.onrender.com'
     ];
 
     const corsOptions = {
       origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl)
+        console.log("🔍 Incoming Origin:", origin); // 👈 ADD THIS LINE
+    
         if (!origin || allowedOrigins.includes(origin)) {
           callback(null, true);
         } else {
+          console.log("⛔ Not allowed by CORS:", origin);
           callback(new Error('Not allowed by CORS'));
         }
       },
@@ -43,11 +46,12 @@ class Server {
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
     };
+    
 
     this.app.use(cors(corsOptions));
 
     // // Handle preflight (OPTIONS) requests globally
-    // this.app.options('*', cors(corsOptions));
+    this.app.options('*', cors(corsOptions));
 
     this.http = http.Server(this.app);
   }

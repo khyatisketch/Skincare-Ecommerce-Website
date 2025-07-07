@@ -12,7 +12,7 @@ const requestOtpProvider = async ({ phone }) => {
             data: {
                 phone,
                 code: otpCode,
-                expiresAt,
+                expiresAt
             },
         });
 

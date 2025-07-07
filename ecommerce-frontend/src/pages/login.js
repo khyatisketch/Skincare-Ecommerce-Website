@@ -22,26 +22,24 @@ export default function Login() {
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/request-otp`,
         { phone }
       );
-
-      // const otpCode = res.data.result?.code;
-      console.log(res)
+  
       setMessage('OTP sent successfully!');
-
-      // In development, show OTP via alert or auto-fill
-      if (res) {
-        // alert(`Your OTP is: ${otpCode}`);
-        console.log('OTP code from response:', res);
-        setOtp(res); // Optional: pre-fill input
+  
+      // In development, auto-fill OTP
+      const otpCode = res.data.result?.code;
+      if (otpCode) {
+        console.log('OTP code from response:', otpCode);
+        setOtp(otpCode); // ✅ Auto-fill for dev only
       }
-
-      setStep(2); // Move to OTP input screen
+  
+      setStep(2);
     } catch (err) {
       setMessage(err?.response?.data?.message || 'Failed to send OTP');
     } finally {
       setLoading(false);
     }
   };
-
+  
   const verifyOtp = async () => {
     setLoading(true);
     try {

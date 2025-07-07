@@ -20,7 +20,7 @@ const requestOtpProvider = async ({ phone }) => {
 
         return {
             message: 'OTP sent successfully via SMS',
-            ...(process.env.NODE_ENV !== 'production' && { code: otpCode }) // Return OTP only in dev
+            code:otpCode // Return OTP only in dev
         };
     } catch (error) {
         console.error("Error in OTP Provider ::", error);

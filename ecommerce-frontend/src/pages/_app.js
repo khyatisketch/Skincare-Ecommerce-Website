@@ -4,9 +4,12 @@ import { CartProvider } from '../context/CartContext'
 // import CartDrawer from './cart'
 import CartDrawer from '../components/CartDrawer' // ✅ Corrected
 import { Toaster } from 'react-hot-toast'
+import { UserProvider } from '../context/UserContext'
+
 
 export default function App({ Component, pageProps }) {
   return (
+    <UserProvider>
     <AuthProvider>
       <CartProvider>
       <Toaster position="top-center"
@@ -31,5 +34,6 @@ export default function App({ Component, pageProps }) {
         <CartDrawer />
       </CartProvider>
     </AuthProvider>
+    </UserProvider>
   )
 }

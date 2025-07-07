@@ -28,43 +28,58 @@ const requestOtpProvider = async ({ phone }) => {
     }
 };
 
-const verifyOtpProvider = async ({ phone, code, sessionId }) => {
+const verifyOtpProvider = async ({ phone, code }) => {
     try {
-        const response = await axios.get(
-            `https://2factor.in/API/V1/${process.env.TWO_FACTOR_API_KEY}/SMS/VERIFY/${sessionId}/${code}`
-        );
-
-        const data = response.data;
-
-        if (data.Status !== 'Success') {
-            throw { message: 'Invalid or expired OTP' };
-        }
-
-        let user = await prisma.user.findUnique({ where: { phone } });
-
-        if (!user) {
-            user = await prisma.user.create({ data: { phone } });
-        }
-
-        const token = jwt.sign(
-            { userId: user.id, role: user.role },
-            process.env.JWT_SECRET,
-            { expiresIn: '7d' }
-        );
-        const profileIncomplete = !user.email || !user.name;
-
-        return {
-            token,
-            user,
-            message: 'OTP verified and user logged in successfully',
-            profileIncomplete,
-        };
+      // 1. Find the OTP entry for the phone
+      const otpEntry = await prisma.otp.findFirst({
+        where: {
+          phone,
+          code,
+          expiresAt: {
+            gte: new Date(), // Ensure it's not expired
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+  
+      if (!otpEntry) {
+        throw { message: 'Invalid or expired OTP' };
+      }
+  
+      // 2. Clean up OTPs (optional but good practice)
+      await prisma.otp.deleteMany({
+        where: { phone },
+      });
+  
+      // 3. Find or create the user
+      let user = await prisma.user.findUnique({ where: { phone } });
+  
+      if (!user) {
+        user = await prisma.user.create({ data: { phone } });
+      }
+  
+      // 4. Generate JWT token
+      const token = jwt.sign(
+        { userId: user.id, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+  
+      const profileIncomplete = !user.email || !user.name;
+  
+      return {
+        token,
+        user,
+        message: 'OTP verified and user logged in successfully',
+        profileIncomplete,
+      };
     } catch (err) {
-        console.error("Error in verifyOtpProvider (2Factor):", err);
-        throw err;
+      console.error("Error in verifyOtpProvider:", err);
+      throw err;
     }
-};
-
+  };  
 
 const updateProfileProvider = async (userId, { name, email, profileImageUrl }) => {
     try {

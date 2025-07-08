@@ -7,7 +7,7 @@ const http = require('http');
 
 const AppConfig = require('./src/config/app-config');
 const Routes = require('./src/routes');
-const webhookRouter = require('./src/routes/webhook');
+// const webhookRouter = require('./src/routes/webhook'); // Uncomment if needed
 
 class Server {
   constructor() {
@@ -17,17 +17,17 @@ class Server {
     const allowedOrigins = [
       'http://localhost:3000',
       'https://skincare-ecommerce-website.vercel.app',
-      'https://skincare-ecommerce-website.onrender.com'
+      'https://skincare-ecommerce-website.onrender.com',
     ];
 
-    // ✅ Define corsOptions clearly
+    // ✅ Configure CORS
     const corsOptions = {
       origin: function (origin, callback) {
-        console.log("🔍 Incoming Origin:", origin);
+        console.log('🔍 Incoming Origin:', origin);
         if (!origin || allowedOrigins.includes(origin)) {
           callback(null, true);
         } else {
-          console.log("⛔ Not allowed by CORS:", origin);
+          console.log('⛔ Not allowed by CORS:', origin);
           callback(new Error('Not allowed by CORS'));
         }
       },
@@ -36,13 +36,24 @@ class Server {
       allowedHeaders: ['Content-Type', 'Authorization'],
     };
 
-    // ✅ Apply CORS middleware BEFORE anything else
+    // ✅ Apply CORS middleware globally
     this.app.use(cors(corsOptions));
-    this.app.options('/', cors(corsOptions)); // ✅ Handle all preflight requests
 
-    // ✅ Optional: Custom header (e.g., ngrok)
+    // ✅ Custom preflight (OPTIONS) response handler
     this.app.use((req, res, next) => {
-      res.header("ngrok-skip-browser-warning", "1");
+      if (req.method === 'OPTIONS') {
+        res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        res.header('Access-Control-Allow-Credentials', 'true');
+        return res.sendStatus(200);
+      }
+      next();
+    });
+
+    // ✅ Optional: skip ngrok browser warning
+    this.app.use((req, res, next) => {
+      res.header('ngrok-skip-browser-warning', '1');
       next();
     });
 

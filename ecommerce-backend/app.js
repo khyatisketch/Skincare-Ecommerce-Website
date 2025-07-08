@@ -1,9 +1,9 @@
 require('dotenv').config();
 
 /* eslint-disable no-console */
+const cors = require('cors');
 const express = require('express');
 const http = require('http');
-const cors = require('cors');
 
 const AppConfig = require('./src/config/app-config');
 const Routes = require('./src/routes');
@@ -13,28 +13,17 @@ class Server {
   constructor() {
     this.app = express();
 
-    // Middleware to skip Ngrok browser warning
-    this.app.use((req, res, next) => {
-      res.header("ngrok-skip-browser-warning", "1");
-      res.header('Access-Control-Allow-Credentials', 'true');
-      next();
-    });
-
-    // Body parsers
-    this.app.use(express.json({ limit: '50mb' }));
-    this.app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-
-    // ✅ CORS Setup
+    // ✅ Define allowed origins
     const allowedOrigins = [
       'http://localhost:3000',
       'https://skincare-ecommerce-website.vercel.app',
       'https://skincare-ecommerce-website.onrender.com'
     ];
 
+    // ✅ Define corsOptions clearly
     const corsOptions = {
       origin: function (origin, callback) {
-        console.log("🔍 Incoming Origin:", origin); // 👈 ADD THIS LINE
-    
+        console.log("🔍 Incoming Origin:", origin);
         if (!origin || allowedOrigins.includes(origin)) {
           callback(null, true);
         } else {
@@ -42,16 +31,24 @@ class Server {
           callback(new Error('Not allowed by CORS'));
         }
       },
+      credentials: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
-      credentials: true,
     };
-    
 
+    // ✅ Apply CORS middleware BEFORE anything else
     this.app.use(cors(corsOptions));
+    this.app.options('/', cors(corsOptions)); // ✅ Handle all preflight requests
 
-    // // // Handle preflight (OPTIONS) requests globally
-    this.app.options('/', cors(corsOptions));
+    // ✅ Optional: Custom header (e.g., ngrok)
+    this.app.use((req, res, next) => {
+      res.header("ngrok-skip-browser-warning", "1");
+      next();
+    });
+
+    // ✅ Body parsers AFTER CORS
+    this.app.use(express.json({ limit: '50mb' }));
+    this.app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
     this.http = http.Server(this.app);
   }
@@ -61,8 +58,9 @@ class Server {
   }
 
   includeRoutes() {
-    // You can include webhookRouter here if needed
+    // Optional webhook route
     // this.app.use('/webhook', webhookRouter);
+
     new Routes(this.app).routesConfig();
   }
 

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useUser } from '@/context/UserContext'
 import ProductCard from '../components/ProductCard'
+import AccountLayout from '../components/AccountLayout'
 
 export default function WishlistPage() {
   const { user } = useUser()
@@ -22,13 +23,33 @@ export default function WishlistPage() {
   if (!user) return <p className="p-10">Please login to view your wishlist.</p>
 
   return (
-    <div className="max-w-6xl mx-auto py-12 px-6">
-      <h1 className="text-3xl font-bold mb-6">Your Wishlist 💖</h1>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {wishlist.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-    </div>
+    <AccountLayout activeTab="wishlist">
+      <h1 style={{
+        fontSize: '1.75rem',
+        color: '#9333ea',
+        marginBottom: '1.5rem',
+        fontWeight: 700
+      }}>Your Wishlist 💖</h1>
+
+      {wishlist.length === 0 ? (
+        <p style={{ color: '#888' }}>Your wishlist is empty.</p>
+      ) : (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+          gap: '20px'
+        }}>
+          <div style={{
+  background: 'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)',
+  borderRadius: '12px',
+  padding: '12px'
+}}>
+          {wishlist.map(product => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+        </div>
+      )}
+    </AccountLayout>
   )
 }

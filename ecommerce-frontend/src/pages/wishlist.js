@@ -64,9 +64,9 @@ export default function WishlistPage() {
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
           gap: '20px',
-          background: 'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)',
-          padding: '20px',
-          borderRadius: '12px'
+          // background: 'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)',
+          // padding: '20px',
+          // borderRadius: '12px'
         }}>
           {wishlist.map(product => (
             <ProductCard key={product.id} product={product} />

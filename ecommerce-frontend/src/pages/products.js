@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 // import Link from 'next/link';
-import { useCart } from '../context/CartContext'
+// import { useCart } from '../context/CartContext'
 import { useSearchParams } from 'next/navigation'
 // import WishlistButton from '../components/WishListButton'
 import ProductCard from '../components/ProductCard'

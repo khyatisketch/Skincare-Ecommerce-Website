@@ -20,12 +20,12 @@ export default function Products() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const [addedProductId, setAddedProductId] = useState(null);
+  const [addedProductId] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
   // const [productReviews, setProductReviews] = useState({});
   const [ratings, setRatings] = useState({});
 
-  const { addToCart, setIsCartOpen } = useCart()
+  // const { addToCart, setIsCartOpen } = useCart()
 
 
   const limit = 10;

@@ -1,14 +1,17 @@
+'use client'
+
 import { Heart, HeartOff } from 'lucide-react'
 import { useUser } from '@/context/UserContext'
 import { useState, useEffect } from 'react'
+import toast from 'react-hot-toast'
 
 export default function WishlistButton({ productId }: { productId: number }) {
   const { user } = useUser()
   const [isWished, setIsWished] = useState(false)
-  const token = localStorage.getItem('token')
 
   useEffect(() => {
-    if (token) {
+    const token = localStorage.getItem('token')
+    if (user && token) {
       fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/wishlist/getWishlist`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -23,16 +26,19 @@ export default function WishlistButton({ productId }: { productId: number }) {
             }[]
           }
         }) => {
-          setIsWished(
-            data.result.wishlist.some(item => item.product.id === productId)
-          )
+          const wished = data.result.wishlist.some(item => item.product.id === productId)
+          setIsWished(wished)
         })
-        .catch(err => console.error('Failed to fetch wishlist:', err))
+        .catch(err => {
+          console.error('Failed to fetch wishlist:', err)
+          toast.error('Could not load wishlist')
+        })
     }
   }, [user, productId])
 
   const toggleWishlist = async () => {
-    if (!token) return alert('Login required')
+    const token = localStorage.getItem('token')
+    if (!user || !token) return toast.error('Please log in to use wishlist.')
 
     const url = isWished
       ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/wishlist/${productId}`
@@ -51,10 +57,14 @@ export default function WishlistButton({ productId }: { productId: number }) {
     }
 
     try {
-      await fetch(url, options)
+      const res = await fetch(url, options)
+      if (!res.ok) throw new Error('Request failed')
+
       setIsWished(!isWished)
+      toast.success(isWished ? 'Removed from wishlist' : 'Added to wishlist 💖')
     } catch (error) {
       console.error('Error toggling wishlist:', error)
+      toast.error('Something went wrong!')
     }
   }
 

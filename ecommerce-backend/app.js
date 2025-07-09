@@ -11,40 +11,40 @@ class Server {
   constructor() {
     this.app = express();
 
-    // ✅ Ngrok browser warning header
-    this.app.use((req, res, next) => {
-      res.header("ngrok-skip-browser-warning", "1");
-      next();
-    });
-
-    // ✅ Secure CORS Setup
+    // ✅ Define allowed origins
     const allowedOrigins = [
       'http://localhost:3000',
       'https://skincare-ecommerce-website.vercel.app',
       'https://skincare-ecommerce-website.onrender.com',
     ];
 
-    const corsOptions = {
-      origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-          callback(null, true);
-        } else {
-          callback(new Error('Not allowed by CORS'));
-        }
-      },
-      credentials: true,
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization'],
-    };
+    // ✅ Define universal CORS middleware
+    this.app.use((req, res, next) => {
+      const origin = req.headers.origin;
+      if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }
 
-    this.app.use(cors(corsOptions));
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-    // ✅ Preflight OPTIONS requests
-    this.app.options('/', cors(corsOptions));
+      if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+      }
 
-    // ✅ Body parsers after CORS
+      next();
+    });
+
+    // ✅ Apply express.json AFTER CORS
     this.app.use(express.json({ limit: '50mb' }));
     this.app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+    // Optional: Skip ngrok warning
+    this.app.use((req, res, next) => {
+      res.header('ngrok-skip-browser-warning', '1');
+      next();
+    });
 
     this.http = http.Server(this.app);
   }
@@ -58,11 +58,14 @@ class Server {
   }
 
   startTheServer() {
-    const port = process.env.SERVER_PORT || 4044;
+    this.appConfig();
+    this.includeRoutes();
+
+    const port = process.env.PORT || 4044;
     const host = process.env.NODE_SERVER_HOST || '0.0.0.0';
 
-    this.http.listen(port, host, () => {
-      console.log(`🚀 Listening on port: ${port}`);
+    this.http.listen(port, host, async () => {
+      console.log(`🚀 Server is listening on port: ${port}`);
     });
   }
 }

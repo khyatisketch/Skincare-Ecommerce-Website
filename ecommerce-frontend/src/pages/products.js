@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useSearchParams } from 'next/navigation'
 // import WishlistButton from '../components/WishListButton'
 import ProductCard from '../components/ProductCard'
+import Navbar from '../components/Navbar'
 
 
 
@@ -146,6 +147,8 @@ export default function Products() {
           }
         `}
       </style>
+
+      <Navbar />
 
       <div style={{ maxWidth: 1280, margin: '50px auto', padding: '0 30px' }}>
 

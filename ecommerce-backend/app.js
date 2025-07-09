@@ -1,33 +1,32 @@
 require('dotenv').config();
 
-/* eslint-disable no-console */
-const cors = require('cors');
 const express = require('express');
 const http = require('http');
+const cors = require('cors');
 
 const AppConfig = require('./src/config/app-config');
 const Routes = require('./src/routes');
-// const webhookRouter = require('./src/routes/webhook'); // Uncomment if needed
+// const webhookRouter = require('./src/routes/webhook'); // Optional
 
 class Server {
   constructor() {
     this.app = express();
 
-    // ✅ Define allowed origins
+    // ✅ Allowed Origins
     const allowedOrigins = [
       'http://localhost:3000',
       'https://skincare-ecommerce-website.vercel.app',
       'https://skincare-ecommerce-website.onrender.com',
     ];
 
-    // ✅ Configure CORS
+    // ✅ CORS Options
     const corsOptions = {
       origin: function (origin, callback) {
         console.log('🔍 Incoming Origin:', origin);
         if (!origin || allowedOrigins.includes(origin)) {
           callback(null, true);
         } else {
-          console.log('⛔ Not allowed by CORS:', origin);
+          console.warn('⛔ Blocked by CORS:', origin);
           callback(new Error('Not allowed by CORS'));
         }
       },
@@ -39,7 +38,7 @@ class Server {
     // ✅ Apply CORS middleware globally
     this.app.use(cors(corsOptions));
 
-    // ✅ Custom preflight (OPTIONS) response handler
+    // ✅ Handle preflight OPTIONS requests manually
     this.app.use((req, res, next) => {
       if (req.method === 'OPTIONS') {
         res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
@@ -57,7 +56,7 @@ class Server {
       next();
     });
 
-    // ✅ Body parsers AFTER CORS
+    // ✅ Body parsers (after CORS)
     this.app.use(express.json({ limit: '50mb' }));
     this.app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
@@ -69,7 +68,7 @@ class Server {
   }
 
   includeRoutes() {
-    // Optional webhook route
+    // Optional webhook support
     // this.app.use('/webhook', webhookRouter);
 
     new Routes(this.app).routesConfig();

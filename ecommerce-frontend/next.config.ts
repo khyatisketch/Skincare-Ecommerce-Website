@@ -10,9 +10,9 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/:path*`, // ✅ Proxy to backend
+        destination: `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/:path*`, // Just leave as string, no template literal
       },
-    ]
+    ];
   },
 }
 

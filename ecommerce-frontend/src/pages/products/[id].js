@@ -48,7 +48,7 @@ useEffect(() => {
 
 useEffect(() => {
   if (id) {
-    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/${id}/getReviews`)
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/${id}/get-reviews`)
       .then(res => {
         const fetchedReviews = res.data?.result?.reviews || [];
         setReviews(fetchedReviews);
@@ -79,7 +79,7 @@ const submitReview = async () => {
     setComment('');
 
     // Optionally, refetch reviews or show a success toast
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/${id}/getReviews`);
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/${id}/get-reviews`);
     const fetchedReviews = res.data?.result?.reviews || [];
     setReviews(fetchedReviews);
     alert("Review submitted!");

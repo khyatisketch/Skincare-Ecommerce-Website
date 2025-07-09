@@ -13,7 +13,7 @@ router.get('/product/:id', productController.getProductById);
 router.get('/related/:categoryId', productController.getRelatedProducts);
 router.patch('/admin/products/:id/restock', verifyJWT,  authorizeAdmin, productController.restockProduct);
 router.post('/:id/reviews', verifyJWT, productController.createReview);
-router.get('/:id/getReviews', productController.getProductReviews);
+router.get('/:id/get-reviews', productController.getProductReviews);
 router.post('/avgRating', productController.getAvgRating);
 router.get('/admin/reviews', verifyJWT, authorizeAdmin, productController.getReviews);
 router.patch('/admin/reviews/:id/approve', verifyJWT, authorizeAdmin, productController.approveReview);

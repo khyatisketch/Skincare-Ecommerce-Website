@@ -74,6 +74,8 @@ this.app.use((req, res, next) => {
     this.http.listen(port, host, async () => {
       console.log(`🚀 Server is listening on port: ${port}`);
     });
+    const { startKeepAlivePing } = require('./src/utils/keepAlive');
+startKeepAlivePing();
   }
 }
 

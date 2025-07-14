@@ -63,7 +63,7 @@ async function verifyJWT(req, res, next) {
 
                     const { email, useruuid } = decoded;
                     req.decoded = { ...decoded, token };
-                    req.user = decoded; 
+                    req.user = decoded.data ? decoded.data : decoded;
 
                     if (req.body) {
                         req.body.userId = decoded.useruuid;

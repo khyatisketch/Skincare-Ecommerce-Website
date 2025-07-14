@@ -51,7 +51,7 @@ export default function AdminLayout({ children }) {
       </div>
 
       {/* Sidebar */}
-      <aside className={`z-20 w-64 bg-white border-r shadow-sm p-6 
+      <aside className={`z-20 w-56 bg-white border-r shadow-sm p-6 
         ${sidebarOpen ? 'fixed' : 'hidden'} 
         md:relative md:flex flex-col h-full md:h-screen top-0 left-0 
         transition-transform duration-300 ease-in-out

@@ -176,7 +176,7 @@ const saveShippingInfo = async (orderId) => {
       className="flex flex-col sm:flex-row sm:items-center gap-4 p-4"
     >
       <img
-        src={item.product?.imageUrl}
+        src={item.product?.imageUrl[0]}
         alt={item.product?.name}
         className="w-20 h-20 object-cover rounded-lg border"
       />

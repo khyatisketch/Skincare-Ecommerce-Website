@@ -102,80 +102,167 @@ function AdminSettings() {
   }
 
   return (
-    <div className="w-full py-6 px-4 md:px-0">
-      <h1 className="text-4xl font-semibold text-gray-800 mb-10">Admin Settings</h1>
+    // <div className="w-full py-6 px-4 md:px-0">
+    //   <h1 className="text-4xl font-semibold text-gray-800 mb-10">Admin Settings</h1>
 
-      <div className="bg-white rounded-2xl shadow-md p-6 max-w-xl space-y-6">
-        {/* Profile Image Preview */}
-        {profilePreview && (
-          <div className="flex justify-center">
-            <img
-              src={profilePreview}
-              alt="Profile"
-              className="w-24 h-24 rounded-full border object-cover"
-            />
-          </div>
-        )}
+    //   <div className="bg-white rounded-2xl shadow-md p-6 max-w-xl space-y-6">
+    //     {/* Profile Image Preview */}
+    //     {profilePreview && (
+    //       <div className="flex justify-center">
+    //         <img
+    //           src={profilePreview}
+    //           alt="Profile"
+    //           className="w-24 h-24 rounded-full border object-cover"
+    //         />
+    //       </div>
+    //     )}
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-          <input
-            name="name"
-            value={profile.name}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-xl px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-400"
-            placeholder="Your Name"
-          />
-        </div>
+    //     <div>
+    //       <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+    //       <input
+    //         name="name"
+    //         value={profile.name}
+    //         onChange={handleChange}
+    //         className="w-full border border-gray-300 rounded-xl px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-400"
+    //         placeholder="Your Name"
+    //       />
+    //     </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-          <input
-            name="email"
-            value={profile.email}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-xl px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-400"
-            placeholder="you@example.com"
-          />
-        </div>
+    //     <div>
+    //       <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+    //       <input
+    //         name="email"
+    //         value={profile.email}
+    //         onChange={handleChange}
+    //         className="w-full border border-gray-300 rounded-xl px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-400"
+    //         placeholder="you@example.com"
+    //       />
+    //     </div>
 
-        {/* Optional: Read-only phone and role */}
-        <div>
-          <label className="block text-sm font-medium text-gray-500 mb-1">Phone (readonly)</label>
-          <input
-            value={profile.phone}
-            readOnly
-            className="w-full bg-gray-100 text-gray-500 border border-gray-200 rounded-xl px-4 py-2"
-          />
-        </div>
+    //     {/* Optional: Read-only phone and role */}
+    //     <div>
+    //       <label className="block text-sm font-medium text-gray-500 mb-1">Phone (readonly)</label>
+    //       <input
+    //         value={profile.phone}
+    //         readOnly
+    //         className="w-full bg-gray-100 text-gray-500 border border-gray-200 rounded-xl px-4 py-2"
+    //       />
+    //     </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-500 mb-1">Role</label>
-          <input
-            value={profile.role}
-            readOnly
-            className="w-full bg-gray-100 text-gray-500 border border-gray-200 rounded-xl px-4 py-2"
-          />
-        </div>
+    //     <div>
+    //       <label className="block text-sm font-medium text-gray-500 mb-1">Role</label>
+    //       <input
+    //         value={profile.role}
+    //         readOnly
+    //         className="w-full bg-gray-100 text-gray-500 border border-gray-200 rounded-xl px-4 py-2"
+    //       />
+    //     </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="text-sm"
-          />
-        </div>
+    //     <div>
+    //       <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
+    //       <input
+    //         type="file"
+    //         accept="image/*"
+    //         onChange={handleImageChange}
+    //         className="text-sm"
+    //       />
+    //     </div>
 
-        <button
-          onClick={handleSave}
-          className="bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-xl px-6 py-2 text-sm"
-          disabled={saving}
-        >
-          {saving ? 'Saving...' : 'Save Changes'}
-        </button>
-      </div>
+    //     <button
+    //       onClick={handleSave}
+    //       className="bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-xl px-6 py-2 text-sm"
+    //       disabled={saving}
+    //     >
+    //       {saving ? 'Saving...' : 'Save Changes'}
+    //     </button>
+    //   </div>
+    // </div>
+
+    <div className="max-w-3xl mx-auto bg-white border border-pink-200 rounded-3xl p-8 shadow-sm font-montserrat">
+  <h2 className="text-3xl font-bold text-pink-600 mb-6 border-b border-pink-300 pb-2">
+    Admin Profile Settings
+  </h2>
+
+  {/* Grid layout for form inputs */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {/* Name */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+      <input
+        name="name"
+        value={profile.name}
+        onChange={handleChange}
+        className="w-full border border-gray-300 rounded-xl px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-400"
+        placeholder="Your Name"
+      />
     </div>
+
+    {/* Email */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+      <input
+        name="email"
+        value={profile.email}
+        onChange={handleChange}
+        className="w-full border border-gray-300 rounded-xl px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-400"
+        placeholder="you@example.com"
+      />
+    </div>
+
+    {/* Phone */}
+    <div>
+      <label className="block text-sm font-medium text-gray-500 mb-1">Phone</label>
+      <input
+        value={profile.phone}
+        readOnly
+        className="w-full bg-gray-100 text-gray-500 border border-gray-200 rounded-xl px-4 py-2"
+      />
+    </div>
+
+    {/* Role */}
+    <div>
+      <label className="block text-sm font-medium text-gray-500 mb-1">Role</label>
+      <input
+        value={profile.role}
+        readOnly
+        className="w-full bg-gray-100 text-gray-500 border border-gray-200 rounded-xl px-4 py-2"
+      />
+    </div>
+  </div>
+
+  {/* Profile image preview */}
+  {profilePreview && (
+    <div className="mt-6 flex justify-center">
+      <img
+        src={profilePreview}
+        alt="Profile"
+        className="w-24 h-24 rounded-full border object-cover"
+      />
+    </div>
+  )}
+
+  {/* Image upload */}
+  <div className="mt-6">
+    <label className="block text-sm font-medium text-gray-700 mb-1">Upload Profile Image</label>
+    <input
+      type="file"
+      accept="image/*"
+      onChange={handleImageChange}
+      className="text-sm"
+    />
+  </div>
+
+  {/* Save button */}
+  <div className="mt-8">
+    <button
+      onClick={handleSave}
+      className="bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-xl px-6 py-2 text-sm"
+      disabled={saving}
+    >
+      {saving ? 'Saving...' : 'Save Changes'}
+    </button>
+  </div>
+</div>
+
   )
 }

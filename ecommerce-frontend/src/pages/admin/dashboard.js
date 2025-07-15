@@ -25,7 +25,7 @@ function AdminDashboard() {
   if (!stats) return <p className="p-10">Loading dashboard...</p>
 
   return (
-    <div className="w-full py-6 px-4 md:px-8">
+    <div className="w-full py-6 px-4 md:px-0">
     <h1 className="text-4xl font-semibold text-gray-800 mb-10">Admin Overview</h1>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <StatCard label="Total Orders" value={stats.totalOrders} colorFrom="from-pink-100" colorTo="to-pink-50" icon="📦" />

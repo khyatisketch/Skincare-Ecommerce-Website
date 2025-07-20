@@ -102,26 +102,40 @@ export default function Navbar() {
                 </button>
                 {showUserDropdown && (
                   <div className="absolute right-0 mt-2 bg-white border rounded-md shadow-lg w-52 z-50">
-                    <ul className="py-1 text-sm text-gray-700">
-                      <li>
-                        <Link
-                          href="/profile-page"
-                          className="flex items-center px-4 py-3 hover:bg-gray-100 transition"
-                        >
-                          <User className="w-4 h-4 mr-2" />
-                          Profile
-                        </Link>
-                      </li>
-                      <li>
-                        <button
-                          onClick={logout}
-                          className="flex items-center w-full px-4 py-3 text-red-500 hover:bg-gray-100 transition"
-                        >
-                          <LogOut className="w-4 h-4 mr-2" />
-                          Logout
-                        </button>
-                      </li>
-                    </ul>
+                  <ul className="py-1 text-sm text-gray-700">
+  <li>
+    <Link
+      href="/profile-page"
+      className="flex items-center px-4 py-3 hover:bg-gray-100 transition"
+    >
+      <User className="w-4 h-4 mr-2" />
+      Profile
+    </Link>
+  </li>
+
+  {user.role === 'admin' && (
+    <li>
+      <Link
+        href="/admin/dashboard"
+        className="flex items-center px-4 py-3 hover:bg-gray-100 transition"
+      >
+        <User className="w-4 h-4 mr-2" />
+        Dashboard
+      </Link>
+    </li>
+  )}
+
+  <li>
+    <button
+      onClick={logout}
+      className="flex items-center w-full px-4 py-3 text-red-500 hover:bg-gray-100 transition"
+    >
+      <LogOut className="w-4 h-4 mr-2" />
+      Logout
+    </button>
+  </li>
+</ul>
+
                   </div>
                 )}
               </div>

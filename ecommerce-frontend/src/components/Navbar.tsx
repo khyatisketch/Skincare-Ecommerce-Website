@@ -113,7 +113,7 @@ export default function Navbar() {
     </Link>
   </li>
 
-  {user.role === 'admin' && (
+  {user.role === 'ADMIN' && (
     <li>
       <Link
         href="/admin/dashboard"

@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import {  User, LogOut, ChevronDown } from 'lucide-react'
+import {  User, LogOut, ChevronDown, LayoutDashboard } from 'lucide-react'
 import { useUser } from '@/context/UserContext'
 import axios from 'axios'
 
@@ -120,7 +120,7 @@ export default function Navbar() {
         href="/admin/dashboard"
         className="flex items-center px-4 py-3 hover:bg-gray-100 transition"
       >
-        <User className="w-4 h-4 mr-2" />
+        <LayoutDashboard className="w-4 h-4 mr-2" />
         Dashboard
       </Link>
     </li>
